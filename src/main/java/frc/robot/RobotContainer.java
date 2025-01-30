@@ -10,19 +10,21 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.AlgaeRemovalDownerCommand;
-import frc.robot.commands.AlgaeRemovalUpperCommand;
-import frc.robot.commands.ArmIntakeCommand;
-import frc.robot.commands.ArmOuttakeCommand;
+import frc.robot.commands.AlgaeDownRemoveCommand;
+import frc.robot.commands.AlgaeUpRemovalCommand;
+import frc.robot.commands.ArmShooterCommand;
 import frc.robot.commands.GroundAlgaeCommand;
 import frc.robot.commands.GroundCoralCommand;
 import frc.robot.commands.GroundOuttakeCommand;
 import frc.robot.commands.L2Command;
+import frc.robot.commands.L3Command;
+import frc.robot.commands.SourceIntakeCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -31,10 +33,10 @@ import frc.robot.subsystems.GroundIntakeSubsystem;
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.1; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    
 
     public ArmSubsystem armSubsystem = new ArmSubsystem();
     public GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
-
     // public ArmIntakeCommand armCommand = new ArmIntakeCommand(armSubsystem);
     // public GroundCoralCommand groundCoralCommand = new GroundCoralCommand(groundIntake);
     // public GroundAlgaeCommand groundAlgaeCommand = new GroundAlgaeCommand(groundIntake);
@@ -64,6 +66,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         if ((Math.abs(joystick.getLeftX()) > 0.01) && (Math.abs(joystick.getLeftX()) > 0.01)) { 
@@ -96,23 +99,24 @@ public class RobotContainer {
 
         // Testing
         joystick.a().onTrue(new InstantCommand(() -> {
-            armSubsystem.setMiddlePos(95);
-            armSubsystem.setRightBasePos(230);
+            // armSubsystem.setMiddlePos(95);
+            // armSubsystem.setRightBasePos(230);
         }));
 
-        // joystick.a().onTrue(new GroundCoralCommand(groundIntake));
-        // joystick2.a().onTrue(new GroundCoralCommand(groundIntake));
-        // joystick2.leftBumper().onTrue(new GroundAlgaeCommand(groundIntake));
-        // joystick.x().onTrue(new GroundOuttakeCommand(groundIntake));
-       
-        // joystick.b().onTrue(new L2Command(armSubsystem));
-        // joystick.y().onTrue(new L3Command(armSubsystem));
-        // joystick.rightBumper().onTrue(new ArmIntakeCommand(armSubsystem));
-        // joystick2.rightBumper().onTrue(new ArmIntakeCommand(armSubsystem));
-        // joystick.leftBumper().onTrue(new ArmOuttakeCommand(armSubsystem));
-        // joystick2.y().onTrue(new AlgaeRemovalUpperCommand(armSubsystem));
-        // joystick2.y().onTrue(new AlgaeRemovalUpperCommand(armSubsystem));
-        // joystick2.x().onTrue(new AlgaeRemovalDownerCommand(armSubsystem));
+        joystick.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
+        joystick.x().onTrue(new GroundOuttakeCommand(groundIntake, armSubsystem));
+        joystick.b().onTrue(new L2Command(armSubsystem, groundIntake));
+        joystick.y().onTrue(new L3Command(armSubsystem, groundIntake));
+        joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake));
+        joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem));
+        //check for algae removal upper and downer
+
+        joystick2.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
+        joystick2.leftBumper().onTrue(new GroundAlgaeCommand(groundIntake, armSubsystem));
+        joystick2.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake));
+        joystick2.y().onTrue(new AlgaeUpRemovalCommand(armSubsystem, groundIntake));
+        joystick2.x().onTrue(new AlgaeDownRemoveCommand(armSubsystem, groundIntake));
+        //what the fuck does angad have
     }
 
     public Command getAutonomousCommand() {

@@ -24,8 +24,14 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   public CANcoder canCoder = new CANcoder(10, "rio"); 
   public MotionMagicDutyCycle mMotionMagicDutyCycle;
 
+  private final double UPPER_LIMIT = 0;
+  private final double DOWNER_LIMIT = 0;
+
+  public double intakeState = 1;
+
   
   /** Creates a new IntakeSubsystem. */
+  @SuppressWarnings("removal")
   public GroundIntakeSubsystem() {
     // Intake Motor Config
     intakeMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -87,16 +93,18 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Hood Motor Reading", (getHoodPos()));
-    SmartDashboard.putNumber("Hood CANCoder", (getPos()) * 360);
+    SmartDashboard.putNumber("Hood CANCoder", (getPos()));
     // This method will be called once per scheduler run
   }
 
   public double getPos() {
-    double position = canCoder.getAbsolutePosition().getValueAsDouble();
+    double position = canCoder.getAbsolutePosition().getValueAsDouble()*360;
     return position;
   }
 
   public void setPos(double angle) {
+    angle = Math.max(angle, UPPER_LIMIT);
+    angle = Math.min(angle, DOWNER_LIMIT);
     hoodIntakeMotor.setControl(mMotionMagicDutyCycle.withPosition((angle * Constants.hood_gear_ratio) / 360).withSlot(0));
   }
 

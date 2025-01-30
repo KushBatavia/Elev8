@@ -4,33 +4,57 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class L2Command extends Command {
-  private final ArmSubsystem m_arm;
-  private boolean returnflag;
-  /** Creates a new IntakeCommand. */
-  
-  public L2Command(ArmSubsystem m_arm) {
-    this.m_arm = m_arm;
+  private ArmSubsystem m_arm = new ArmSubsystem();
+  private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem(); 
+  private double state = 0;
+  private double armMiddlePos;
+  private double armBasePos;
+  private double SET_ANGLE_Temp;
+  private double SET_POWER_Temp;
+  private double prevT;
+  private double lastT;
+  /** Creates a new L2Command. */
+  public L2Command(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.m_arm = m_arm;
+    this.m_ground = m_ground;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // activate when done
-    // m_arm.setLeftBasePos(0);
-    // m_arm.setRightBasePos(0);
-    // m_arm.setMiddlePos(0);
+    if(m_ground.getPos()>255 || m_ground.getPos()<200) {
+      state = 0.5;
+    }
+    if(state == 0.5){
+      armMiddlePos = m_arm.getMiddleCANPos();
+      if(armMiddlePos < SET_ANGLE_Temp || armBasePos < SET_ANGLE_Temp) {
+        if(armMiddlePos < SET_ANGLE_Temp) {
+          m_arm.setMiddlePos(SET_ANGLE_Temp);
+        }
+        if(armBasePos < SET_ANGLE_Temp) {
+          m_arm.setRightBasePos(SET_ANGLE_Temp);
+        }
+        state = 1;
+      }
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    prevT = Timer.getFPGATimestamp();
+    if(armMiddlePos<SET_ANGLE_Temp  && armBasePos<SET_ANGLE_Temp && state == 1) {    
+      m_arm.shootFlag = true;
+    }    
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -39,6 +63,6 @@ public class L2Command extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnflag;
+    return false;
   }
 }

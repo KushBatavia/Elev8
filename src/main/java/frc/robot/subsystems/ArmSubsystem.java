@@ -47,10 +47,15 @@ public class ArmSubsystem extends SubsystemBase {
   public MotionMagicDutyCycle mMotionMagicDutyCycleBase;
   public MotionMagicDutyCycle mMotionMagicDutyCycleMiddle;
 
-  public static final double MIDDLE_UPPER_LIMIT = 182;
-  public static final double MIDDLE_DOWNER_LIMIT = 244;
+  public static final double BASE_UPPER_LIMIT = 0;
+  public static final double BASE_DOWNER_LIMIT = 0;
+  public static final double MIDDLE_UPPER_LIMIT = 0;
+  public static final double MIDDLE_DOWNER_LIMIT = 0;
+
+  public boolean shootFlag = false;
 
   /** Creates a new ArmSubsystem. */
+  @SuppressWarnings("removal")
   public ArmSubsystem() {
 
     leftBaseMotor.setControl(new Follower(rightBaseMotor.getDeviceID(), true));
@@ -148,12 +153,12 @@ public class ArmSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Left Base CANCoder", (getLeftBaseCANPos()) * 360);
 
     SmartDashboard.putNumber("Right Base Motor Reading", (getRightBasePos()));
-    SmartDashboard.putNumber("Right Base CANCoder", (getRightBaseCANPos()) * 360);
+    SmartDashboard.putNumber("Right Base CANCoder", (getRightBaseCANPos()));
 
     SmartDashboard.putNumber("Middle Motor Reading", (getMiddlePos()));
-    SmartDashboard.putNumber("Middle CANCoder", (getMiddleCANPos()) * 360);
+    SmartDashboard.putNumber("Middle CANCoder", (getMiddleCANPos()));
 
-    armIntakeMotor.setVoltage(3);
+    armIntakeMotor.setVoltage(0);
 
     // This method will be called once per scheduler run
   }
@@ -176,23 +181,22 @@ public class ArmSubsystem extends SubsystemBase {
   // }
 
   // public void setLeftBasePos(double angle) {
-  // leftBaseMotor.setControl(mMotionMagicDutyCycleBase.withPosition((angle *
-  // Constants.arm_gear_ratio) / 360).withSlot(0));
+  // leftBaseMotor.setControl(mMotionMagicDutyCycleBase.withPosition((angle * Constants.arm_gear_ratio) / 360).withSlot(0));
   // }
 
   // public double getLeftBasePos() {
-  // return (leftBaseMotor.getPosition().getValueAsDouble() /
-  // Constants.arm_gear_ratio) * 360;
+  // return (leftBaseMotor.getPosition().getValueAsDouble() / Constants.arm_gear_ratio) * 360;
   // }
 
   public double getRightBaseCANPos() {
-    double position = canCoderLeft.getAbsolutePosition().getValueAsDouble();
+    double position = canCoderLeft.getAbsolutePosition().getValueAsDouble() * 360;
     return position;
   }
 
   public void setRightBasePos(double angle) {
-    rightBaseMotor
-        .setControl(mMotionMagicDutyCycleBase.withPosition((angle * Constants.arm_base_gear_ratio) / 360).withSlot(0));
+    angle = Math.max(angle, BASE_UPPER_LIMIT);
+    angle = Math.min(angle, BASE_DOWNER_LIMIT);
+    rightBaseMotor.setControl(mMotionMagicDutyCycleBase.withPosition((angle * Constants.arm_base_gear_ratio) / 360).withSlot(0));
   }
 
   public double getRightBasePos() {
@@ -200,15 +204,14 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double getMiddleCANPos() {
-    double position = canCoderMiddle.getAbsolutePosition().getValueAsDouble();
+    double position = canCoderMiddle.getAbsolutePosition().getValueAsDouble() * 360 ;
     return position;
   }
 
   public void setMiddlePos(double angle) {
     angle = Math.max(angle, MIDDLE_UPPER_LIMIT);
     angle = Math.min(angle, MIDDLE_DOWNER_LIMIT);
-    middleMotor.setControl(
-        mMotionMagicDutyCycleMiddle.withPosition((angle * Constants.arm_middle_gear_ratio) / 360).withSlot(0));
+    middleMotor.setControl(mMotionMagicDutyCycleMiddle.withPosition((angle * Constants.arm_middle_gear_ratio) / 360).withSlot(0));
   }
 
   public double getMiddlePos() {

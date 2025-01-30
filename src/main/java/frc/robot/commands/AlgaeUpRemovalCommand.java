@@ -10,7 +10,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class L3Command extends Command {
+public class AlgaeUpRemovalCommand extends Command {
   private ArmSubsystem m_arm = new ArmSubsystem();
   private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem(); 
   private double state = 0;
@@ -20,8 +20,8 @@ public class L3Command extends Command {
   private double SET_POWER_Temp;
   private double prevT;
   private double lastT;
-  /** Creates a new L3Command. */
-  public L3Command(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
+  /** Creates a new AlgaeUpRemovalCommand. */
+  public AlgaeUpRemovalCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
     this.m_ground = m_ground;
@@ -44,16 +44,23 @@ public class L3Command extends Command {
         }
         state = 1;
       }
-    }
+    }  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     prevT = Timer.getFPGATimestamp();
-    if(armMiddlePos<SET_ANGLE_Temp  && armBasePos<SET_ANGLE_Temp && state == 1) {
-      m_arm.shootFlag = true;
-    }    
+    if(armMiddlePos>SET_ANGLE_Temp  && armBasePos>SET_ANGLE_Temp && state == 1) {
+      m_arm.setArmIntakeMotor(SET_POWER_Temp);
+      lastT = Timer.getFPGATimestamp();
+      state = 2;
+    }
+    if(state == 2 && Math.abs(prevT - lastT) > 0.5) {
+      m_arm.setArmIntakeMotor(0);
+      state = 3; //FIGURE OUT CLOSE CODE FROM HERE IDK HOW THE MECHANISM IS SUPPOSED TO WORK
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
