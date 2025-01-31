@@ -63,6 +63,10 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    // private SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
+    //         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate*0.1)
+    //         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
     public RobotContainer() {
         configureBindings();
     }
