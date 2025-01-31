@@ -8,11 +8,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
+import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeDownRemoveCommand extends Command {
   private ArmSubsystem m_arm = new ArmSubsystem();
   private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem();
+  private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
   private double state = 0;
   private double armMiddlePos;
   private double armBasePos;
@@ -22,10 +24,11 @@ public class AlgaeDownRemoveCommand extends Command {
   private double lastT;
 
   /** Creates a new AlgaeDownRemoveCommand. */
-  public AlgaeDownRemoveCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
+  public AlgaeDownRemoveCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
     this.m_ground = m_ground;
+    this.m_spark = m_spark;
   }
 
   // Called when the command is initially scheduled.
@@ -53,12 +56,12 @@ public class AlgaeDownRemoveCommand extends Command {
   public void execute() {
     prevT = Timer.getFPGATimestamp();
     if(armMiddlePos>SET_ANGLE_Temp  && armBasePos>SET_ANGLE_Temp && state == 1) {
-      m_arm.setArmIntakeMotor(SET_POWER_Temp);
+      m_spark.setArmIntakeMotor(SET_POWER_Temp);
       lastT = Timer.getFPGATimestamp();
       state = 2;
     }
     if(state == 2 && Math.abs(prevT - lastT) > 0.5) {
-      m_arm.setArmIntakeMotor(0);
+      m_spark.setArmIntakeMotor(0);
       state = 3; //FIGURE OUT CLOSE CODE FROM HERE IDK HOW THE MECHANISM IS SUPPOSED TO WORK
     }
   }

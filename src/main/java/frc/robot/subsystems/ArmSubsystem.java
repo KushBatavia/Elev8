@@ -32,7 +32,6 @@ import frc.robot.Constants;
 
 public class ArmSubsystem extends SubsystemBase {
   // CHANGE ALL CAN IDS
-  public SparkMax armIntakeMotor = new SparkMax(10, MotorType.kBrushless);
   public TalonFX leftBaseMotor = new TalonFX(21, "rio"); // Left Motor is the follower
   public TalonFX rightBaseMotor = new TalonFX(22, "rio"); // Right Motor is the master
   // public Follower leftBaseMotorFollower = new Follower(BASE_CAN_ID, true);
@@ -59,19 +58,6 @@ public class ArmSubsystem extends SubsystemBase {
   public ArmSubsystem() {
 
     leftBaseMotor.setControl(new Follower(rightBaseMotor.getDeviceID(), true));
-    // Arm Intake Motor Config
-
-    config
-        .inverted(true)
-        .idleMode(IdleMode.kBrake);
-    config.encoder
-        .positionConversionFactor(1000)
-        .velocityConversionFactor(1000);
-    config.closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(1.0, 0.0, 0.0);
-
-    armIntakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     // // Left Base Motor Config
     // leftBaseMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -158,14 +144,10 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Middle Motor Reading", (getMiddlePos()));
     SmartDashboard.putNumber("Middle CANCoder", (getMiddleCANPos()));
 
-    armIntakeMotor.setVoltage(0);
-
     // This method will be called once per scheduler run
   }
 
-  public void setArmIntakeMotor(double voltage) {
-    armIntakeMotor.set(voltage);
-  }
+  
 
   public boolean getBeam1() {
     return beamBreaker1.get();

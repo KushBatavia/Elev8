@@ -29,6 +29,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.GroundIntakeSubsystem;
+import frc.robot.subsystems.SparkMaxSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.1; // kSpeedAt12Volts desired top speed
@@ -37,6 +38,7 @@ public class RobotContainer {
 
     public ArmSubsystem armSubsystem = new ArmSubsystem();
     public GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
+    public SparkMaxSubsystem sparkMax = new SparkMaxSubsystem();
     // public ArmIntakeCommand armCommand = new ArmIntakeCommand(armSubsystem);
     // public GroundCoralCommand groundCoralCommand = new GroundCoralCommand(groundIntake);
     // public GroundAlgaeCommand groundAlgaeCommand = new GroundAlgaeCommand(groundIntake);
@@ -107,15 +109,15 @@ public class RobotContainer {
         joystick.x().onTrue(new GroundOuttakeCommand(groundIntake, armSubsystem));
         joystick.b().onTrue(new L2Command(armSubsystem, groundIntake));
         joystick.y().onTrue(new L3Command(armSubsystem, groundIntake));
-        joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake));
-        joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem));
+        joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
+        joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem, sparkMax));
         //check for algae removal upper and downer
 
         joystick2.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
         joystick2.leftBumper().onTrue(new GroundAlgaeCommand(groundIntake, armSubsystem));
-        joystick2.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake));
-        joystick2.y().onTrue(new AlgaeUpRemovalCommand(armSubsystem, groundIntake));
-        joystick2.x().onTrue(new AlgaeDownRemoveCommand(armSubsystem, groundIntake));
+        joystick2.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
+        joystick2.y().onTrue(new AlgaeUpRemovalCommand(armSubsystem, groundIntake, sparkMax));
+        joystick2.x().onTrue(new AlgaeDownRemoveCommand(armSubsystem, groundIntake, sparkMax));
         //what the fuck does angad have
     }
 
