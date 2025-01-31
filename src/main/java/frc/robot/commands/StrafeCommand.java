@@ -5,16 +5,21 @@
 package frc.robot.commands;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class StrafeCommand extends Command {
   /** Creates a new StrafeCommand. */
   private final CommandSwerveDrivetrain drivetrain;
   private final CommandXboxController joystick;
+  private boolean leftDPad = false;
+  private boolean rightDPad = false;
+
   public StrafeCommand(CommandSwerveDrivetrain drivetrain, CommandXboxController joystick) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
@@ -26,17 +31,20 @@ public class StrafeCommand extends Command {
   @Override
   public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
   public void execute() {
-    double leftTrigger = joystick.getLeftTriggerAxis();
-    double rightTrigger = joystick.getRightTriggerAxis();
+    joystick.pov(90).whileTrue(new InstantCommand(() -> {
+        leftDPad = true;
+    }));
+      
+    joystick.pov(270).whileTrue(new InstantCommand(() -> {
+        rightDPad = true;
+    }));
     
-        if (leftTrigger > 0.1) {
-            drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(-leftTrigger * 0.5));
-        } else if (rightTrigger > 0.1) {
-            drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(rightTrigger*0.5));
-        } 
+    if (leftDPad) {
+        drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0));
+    } else if (rightDPad) {
+        drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0));
+    } 
   }
 
   // Called once the command ends or is interrupted.

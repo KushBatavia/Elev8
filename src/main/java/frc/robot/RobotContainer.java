@@ -74,8 +74,8 @@ public class RobotContainer {
     }
     private void configureRobotCentricDrive() {
         StrafeCommand robotCentricDriveCommand = new StrafeCommand(drivetrain, joystick);
-        joystick.leftTrigger().whileTrue(robotCentricDriveCommand);
-        joystick.rightTrigger().whileTrue(robotCentricDriveCommand);
+        joystick.pov(90).whileTrue(robotCentricDriveCommand);
+        joystick.pov(270).whileTrue(robotCentricDriveCommand);
     }
 
     private void configureBindings() {
