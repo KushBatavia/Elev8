@@ -25,6 +25,7 @@ import frc.robot.commands.GroundOuttakeCommand;
 import frc.robot.commands.L2Command;
 import frc.robot.commands.L3Command;
 import frc.robot.commands.SourceIntakeCommand;
+import frc.robot.commands.StrafeCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -69,6 +70,12 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
+        configureRobotCentricDrive();
+    }
+    private void configureRobotCentricDrive() {
+        StrafeCommand robotCentricDriveCommand = new StrafeCommand(drivetrain, joystick);
+        joystick.leftTrigger().whileTrue(robotCentricDriveCommand);
+        joystick.rightTrigger().whileTrue(robotCentricDriveCommand);
     }
 
     private void configureBindings() {
