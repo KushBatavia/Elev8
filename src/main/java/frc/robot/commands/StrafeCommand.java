@@ -35,7 +35,6 @@ public class StrafeCommand extends Command {
     joystick.pov(90).whileTrue(new InstantCommand(() -> {
         leftDPad = true;
     }));
-      
     joystick.pov(270).whileTrue(new InstantCommand(() -> {
         rightDPad = true;
     }));
@@ -49,9 +48,7 @@ public class StrafeCommand extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0));
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

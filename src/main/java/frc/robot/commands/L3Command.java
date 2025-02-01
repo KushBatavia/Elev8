@@ -52,7 +52,7 @@ public class L3Command extends Command {
   public void execute() {
     prevT = Timer.getFPGATimestamp();
     if(armMiddlePos<SET_ANGLE_Temp  && armBasePos<SET_ANGLE_Temp && state == 1) {
-      m_arm.shootFlag = true;
+      ArmSubsystem.shootFlag = true;
     }    
   }
 

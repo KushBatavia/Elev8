@@ -22,6 +22,8 @@ import frc.robot.commands.ArmShooterCommand;
 import frc.robot.commands.GroundAlgaeCommand;
 import frc.robot.commands.GroundCoralCommand;
 import frc.robot.commands.GroundOuttakeCommand;
+import frc.robot.commands.HangClimbCommand;
+import frc.robot.commands.HangPositionCommand;
 import frc.robot.commands.L2Command;
 import frc.robot.commands.L3Command;
 import frc.robot.commands.SourceIntakeCommand;
@@ -70,14 +72,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
-        configureRobotCentricDrive();
     }
-    private void configureRobotCentricDrive() {
-        StrafeCommand robotCentricDriveCommand = new StrafeCommand(drivetrain, joystick);
-        joystick.pov(90).whileTrue(robotCentricDriveCommand);
-        joystick.pov(270).whileTrue(robotCentricDriveCommand);
-    }
-
     private void configureBindings() {
 
         // Note that X is defined as forward according to WPILib convention,
@@ -122,6 +117,9 @@ public class RobotContainer {
         joystick.y().onTrue(new L3Command(armSubsystem, groundIntake));
         joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
         joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem, sparkMax));
+        joystick.pov(90).whileTrue(new StrafeCommand(drivetrain, joystick));
+        joystick.pov(270).whileTrue(new StrafeCommand(drivetrain, joystick));
+        joystick.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));
         //check for algae removal upper and downer
 
         joystick2.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
@@ -129,6 +127,8 @@ public class RobotContainer {
         joystick2.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
         joystick2.y().onTrue(new AlgaeUpRemovalCommand(armSubsystem, groundIntake, sparkMax));
         joystick2.x().onTrue(new AlgaeDownRemoveCommand(armSubsystem, groundIntake, sparkMax));
+        joystick2.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));
+        joystick2.pov(0).onTrue(new HangPositionCommand(armSubsystem, groundIntake));
         //what the fuck does angad have
     }
 

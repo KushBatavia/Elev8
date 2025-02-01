@@ -6,8 +6,11 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -45,13 +48,18 @@ public class ArmSubsystem extends SubsystemBase {
 
   public MotionMagicDutyCycle mMotionMagicDutyCycleBase;
   public MotionMagicDutyCycle mMotionMagicDutyCycleMiddle;
+  public MotionMagicVoltage mMotionMagicVoltageBase;
+  public MotionMagicVoltage mMotionMagicVoltageMiddle;
+  
 
   public static final double BASE_UPPER_LIMIT = 0;
   public static final double BASE_DOWNER_LIMIT = 0;
   public static final double MIDDLE_UPPER_LIMIT = 0;
   public static final double MIDDLE_DOWNER_LIMIT = 0;
 
-  public boolean shootFlag = false;
+  public static boolean algaeFlag = false;
+
+  public static boolean shootFlag = false;
 
   /** Creates a new ArmSubsystem. */
   @SuppressWarnings("removal")
@@ -190,10 +198,21 @@ public class ArmSubsystem extends SubsystemBase {
     return position;
   }
 
+
   public void setMiddlePos(double angle) {
     angle = Math.max(angle, MIDDLE_UPPER_LIMIT);
     angle = Math.min(angle, MIDDLE_DOWNER_LIMIT);
     middleMotor.setControl(mMotionMagicDutyCycleMiddle.withPosition((angle * Constants.arm_middle_gear_ratio) / 360).withSlot(0));
+  }
+  public void setMiddlePosSlow(double angle) {
+    angle = Math.max(angle, MIDDLE_UPPER_LIMIT);
+    angle = Math.min(angle, MIDDLE_DOWNER_LIMIT);
+    middleMotor.setControl(mMotionMagicDutyCycleMiddle.withPosition((angle * Constants.arm_middle_gear_ratio) / 360).withSlot(0));//do something to make it slow
+  }
+  public void setBasePosSlow(double angle) {
+    angle = Math.max(angle, MIDDLE_UPPER_LIMIT);
+    angle = Math.min(angle, MIDDLE_DOWNER_LIMIT);
+    rightBaseMotor.setControl(mMotionMagicDutyCycleMiddle.withPosition((angle * Constants.arm_middle_gear_ratio) / 360).withSlot(0));//do something to make it slow
   }
 
   public double getMiddlePos() {

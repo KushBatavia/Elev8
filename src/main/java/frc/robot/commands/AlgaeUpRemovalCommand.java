@@ -33,11 +33,12 @@ public class AlgaeUpRemovalCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(m_ground.getPos()>255 || m_ground.getPos()<200) {
+    if(m_ground.getPos()>SET_ANGLE_Temp || m_ground.getPos()<SET_ANGLE_Temp) {
       state = 0.5;
     }
     if(state == 0.5){
       armMiddlePos = m_arm.getMiddleCANPos();
+      //SET THE MOTORS TO THE STARTING VALUES
       if(armMiddlePos < SET_ANGLE_Temp || armBasePos < SET_ANGLE_Temp) {
         if(armMiddlePos < SET_ANGLE_Temp) {
           m_arm.setMiddlePos(SET_ANGLE_Temp);
@@ -45,26 +46,15 @@ public class AlgaeUpRemovalCommand extends Command {
         if(armBasePos < SET_ANGLE_Temp) {
           m_arm.setRightBasePos(SET_ANGLE_Temp);
         }
-        state = 1;
-      }
-    }  
+        state = 1; 
+        ArmSubsystem.algaeFlag = true;
+      }    
+   }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    prevT = Timer.getFPGATimestamp();
-    if(armMiddlePos>SET_ANGLE_Temp  && armBasePos>SET_ANGLE_Temp && state == 1) {
-      m_spark.setArmIntakeMotor(SET_POWER_Temp);
-      lastT = Timer.getFPGATimestamp();
-      state = 2;
-    }
-    if(state == 2 && Math.abs(prevT - lastT) > 0.5) {
-      m_spark.setArmIntakeMotor(0);
-      state = 3; //FIGURE OUT CLOSE CODE FROM HERE IDK HOW THE MECHANISM IS SUPPOSED TO WORK
-    }
-    
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

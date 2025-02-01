@@ -33,7 +33,7 @@ public class ArmShooterCommand extends Command {
   @Override
   public void execute() {
     prevT = Timer.getFPGATimestamp();
-    if(m_arm.shootFlag && state == 0){
+    if(ArmSubsystem.shootFlag && state == 0){
       m_spark.setArmIntakeMotor(SET_POWER_Temp);
       lastT = Timer.getFPGATimestamp();
       state = 1;
