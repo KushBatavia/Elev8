@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 
@@ -32,6 +31,11 @@ public class GroundAlgaeCommand extends Command {
     if(m_ground.intakeState == 1){
       state = 0.1;
     }
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
     if(state == 0.1){
       if(m_arm.getMiddleCANPos() < SET_ANGLE_Temp || m_arm.getRightBaseCANPos() < SET_ANGLE_Temp) { 
         //FIGURE OUT THE SIGN FOR THE IF STATEMENT I FORGOT
@@ -45,11 +49,6 @@ public class GroundAlgaeCommand extends Command {
       m_ground.setPos(SET_ANGLE_Temp);
       state = 1;
     }
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
     prevT = Timer.getFPGATimestamp();
     if(state ==1 && m_ground.getPos() > SET_ANGLE_Temp) {
       m_ground.setIntakeMotor(SET_POWER_Temp);

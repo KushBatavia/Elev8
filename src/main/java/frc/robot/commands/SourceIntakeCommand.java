@@ -37,6 +37,11 @@ public class SourceIntakeCommand extends Command {
     if(m_groundIntake.getPos()>255 || m_groundIntake.getPos()<200) {
       state = 0.5;
     }
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
     if(state == 0.5){
       armMiddlePos = m_arm.getMiddleCANPos();
       if(armMiddlePos > SET_ANGLE_Temp || armBasePos > SET_ANGLE_Temp) {
@@ -49,11 +54,6 @@ public class SourceIntakeCommand extends Command {
         state = 1;
       }  
     }
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
      prevT = Timer.getFPGATimestamp();
     if(armMiddlePos<SET_ANGLE_Temp  && armBasePos<SET_ANGLE_Temp && state == 1) {
       m_spark.setArmIntakeMotor(SET_POWER_Temp);

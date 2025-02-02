@@ -31,14 +31,16 @@ public class HangClimbCommand extends Command {
     if(m_ground.getPos()>255 || m_ground.getPos()<200) {
       state = 0.5;
     }
-    if(state == 0.5){
-      //Figure out which motors are being used
-    }
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if(state == 0.5){
+      //Figure out which motors are being used
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

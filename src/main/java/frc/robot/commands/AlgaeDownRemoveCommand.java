@@ -37,6 +37,11 @@ public class AlgaeDownRemoveCommand extends Command {
     if(m_ground.getPos()>SET_ANGLE_Temp || m_ground.getPos()<SET_ANGLE_Temp) {
       state = 0.5;
     }
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
     if(state == 0.5){
       armMiddlePos = m_arm.getMiddleCANPos();
       //SET THE MOTORS TO THE STARTING VALUES
@@ -51,11 +56,6 @@ public class AlgaeDownRemoveCommand extends Command {
         ArmSubsystem.algaeFlag = true;
       }    
    }
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
   }
 
   // Called once the command ends or is interrupted.
