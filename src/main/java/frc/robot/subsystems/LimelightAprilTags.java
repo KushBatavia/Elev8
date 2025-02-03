@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightAprilTags extends SubsystemBase {
-    static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-new");
+  static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-new");
 
   public int pipelineindex = 0;
   public static double tx, ty, tid, tv, tz;
@@ -77,3 +77,4 @@ public class LimelightAprilTags extends SubsystemBase {
     }
   }
 }
+

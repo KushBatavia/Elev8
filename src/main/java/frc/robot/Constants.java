@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -16,6 +20,22 @@ public final class Constants {
   public static final double hood_gear_ratio = 60.0;
   public static final double arm_base_gear_ratio = 80.0;
   public static final double arm_middle_gear_ratio = 39.4736842105;
+  
+  public static final class Swerve { 
+
+    /* Drivetrain Constants */
+    public static final double trackWidth = Units.inchesToMeters(21.73); //TODO: This must be tuned to specific robot
+    public static final double wheelBase = Units.inchesToMeters(21.73); //TODO: This must be tuned to specific robot
+    // public static final double wheelCircumference = chosenModule.wheelCircumference;
+
+
+    public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
+      new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+      new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
+      new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
+      new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+  }
+  
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }

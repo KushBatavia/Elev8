@@ -98,7 +98,7 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   }
 
   public double getPos() {
-    double position = canCoder.getAbsolutePosition().getValueAsDouble()*360;
+    double position = canCoder.getAbsolutePosition().getValueAsDouble() * 360;
     return position;
   }
 
