@@ -19,9 +19,7 @@ public class AlgaeUpRemovalCommand extends Command {
   private double armMiddlePos;
   private double armBasePos;
   private double SET_ANGLE_Temp;
-  private double SET_POWER_Temp;
-  private double prevT;
-  private double lastT;
+  private boolean returnFlag;
   /** Creates a new AlgaeUpRemovalCommand. */
   public AlgaeUpRemovalCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -33,8 +31,11 @@ public class AlgaeUpRemovalCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    returnFlag = false;
     if(m_ground.getPos()>SET_ANGLE_Temp || m_ground.getPos()<SET_ANGLE_Temp) {
       state = 0.5;
+    }else{
+      returnFlag = true;
     }
     
   }
@@ -55,6 +56,7 @@ public class AlgaeUpRemovalCommand extends Command {
         state = 1; 
         ArmSubsystem.algaeFlag = true;
       }    
+      returnFlag = true;
    }
   }
 
@@ -65,6 +67,6 @@ public class AlgaeUpRemovalCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

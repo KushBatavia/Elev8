@@ -22,20 +22,23 @@ public class AlgaeDownRemoveCommand extends Command {
   private double SET_POWER_Temp;//Not the same everywhere, just follow the logic dont look at the variable being used
   private double prevT;
   private double lastT;
+  private boolean returnFlag;
 
   /** Creates a new AlgaeDownRemoveCommand. */
   public AlgaeDownRemoveCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
     this.m_ground = m_ground;
-    this.m_spark = m_spark;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(m_ground.getPos()>SET_ANGLE_Temp || m_ground.getPos()<SET_ANGLE_Temp) {
+    returnFlag = false;
+    if(m_ground.getPos()>SET_ANGLE_Temp && m_ground.getPos()<SET_ANGLE_Temp) {
       state = 0.5;
+    }else{
+      returnFlag = true;
     }
   }
 
@@ -43,18 +46,18 @@ public class AlgaeDownRemoveCommand extends Command {
   @Override
   public void execute() {
     if(state == 0.5){
-      armMiddlePos = m_arm.getMiddleCANPos();
       //SET THE MOTORS TO THE STARTING VALUES
-      if(armMiddlePos < SET_ANGLE_Temp || armBasePos < SET_ANGLE_Temp) {
-        if(armMiddlePos < SET_ANGLE_Temp) {
+      if(m_arm.getMiddleCANPos() < SET_ANGLE_Temp || m_arm.getRightBaseCANPos() < SET_ANGLE_Temp) {
+        if(m_arm.getMiddleCANPos() < SET_ANGLE_Temp) {
           m_arm.setMiddlePos(SET_ANGLE_Temp);
         }
-        if(armBasePos < SET_ANGLE_Temp) {
+        if(m_arm.getRightBaseCANPos() < SET_ANGLE_Temp) {
           m_arm.setRightBasePos(SET_ANGLE_Temp);
         }
         state = 1; 
         ArmSubsystem.algaeFlag = true;
       }    
+      returnFlag = true;
    }
   }
 
@@ -65,6 +68,6 @@ public class AlgaeDownRemoveCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

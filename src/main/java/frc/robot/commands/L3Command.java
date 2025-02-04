@@ -30,6 +30,7 @@ public class L3Command extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    ArmSubsystem.algaeFlag = false;
     if(m_ground.getPos()>255 || m_ground.getPos()<200) {
       state = 0.5;
     }

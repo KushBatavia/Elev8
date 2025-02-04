@@ -61,36 +61,19 @@ public class ArmSubsystem extends SubsystemBase {
 
   public static boolean shootFlag = false;
 
+  public static int armState = 0;
+    //0 = Complete close
+    //1 = L2
+    //2 = L3
+    //3 = Algae Down
+    //4 = Algae Up
+    //5 = Source Intake
+    //6 = Hang
   /** Creates a new ArmSubsystem. */
   @SuppressWarnings("removal")
   public ArmSubsystem() {
 
     leftBaseMotor.setControl(new Follower(rightBaseMotor.getDeviceID(), true));
-
-    // // Left Base Motor Config
-    // leftBaseMotor.getConfigurator().apply(new TalonFXConfiguration());
-    // leftBaseMotor.setInverted(false);
-
-    // TalonFXConfiguration leftBaseMotorTalonConfigs = new TalonFXConfiguration();
-
-    // leftBaseMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(1);
-    // leftBaseMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-1);
-    // leftBaseMotorTalonConfigs.Slot0.withKP(0.2);
-    // leftBaseMotorTalonConfigs.Slot0.withKG(0);
-    // leftBaseMotorTalonConfigs.Slot0.withKI(0);
-    // leftBaseMotorTalonConfigs.Slot0.withKD(0);
-
-    // leftBaseMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
-    // leftBaseMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
-
-    // leftBaseMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(1200);
-    // leftBaseMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(1200);
-
-    // mMotionMagicDutyCycleBase = new MotionMagicDutyCycle(0);
-    // PositionDutyCycle leftBaseMotorPositionDutyCycle = new PositionDutyCycle(0);
-    // leftBaseMotor.getConfigurator().apply(leftBaseMotorTalonConfigs, 0.050);
-    // leftBaseMotor.setPosition(canCoderLeft.getAbsolutePosition().getValueAsDouble()
-    // * Constants.arm_gear_ratio);
 
     // Right Base Motor Config
     rightBaseMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -112,9 +95,9 @@ public class ArmSubsystem extends SubsystemBase {
     rightBaseMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(1200);
 
     mMotionMagicDutyCycleBase = new MotionMagicDutyCycle(0);
-    PositionDutyCycle rightBaseMotorPositionDutyCycle = new PositionDutyCycle(0);
+    // PositionDutyCycle rightBaseMotorPositionDutyCycle = new PositionDutyCycle(0);
     rightBaseMotor.getConfigurator().apply(rightBaseMotorTalonConfigs, 0.050);
-    rightBaseMotor.setPosition(canCoderLeft.getAbsolutePosition().getValueAsDouble() * Constants.arm_base_gear_ratio);
+    rightBaseMotor.setPosition(getRightBaseCANPos()/360 * Constants.arm_base_gear_ratio);
 
     // Middle Motor Config
     middleMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -136,10 +119,11 @@ public class ArmSubsystem extends SubsystemBase {
     middleMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(1200);
 
     mMotionMagicDutyCycleMiddle = new MotionMagicDutyCycle(0);
-    PositionDutyCycle middleMotorPositionDutyCycle = new PositionDutyCycle(0);
+    // PositionDutyCycle middleMotorPositionDutyCycle = new PositionDutyCycle(0);
     middleMotor.getConfigurator().apply(middleMotorTalonConfigs, 0.050);
-    middleMotor.setPosition(canCoderMiddle.getAbsolutePosition().getValueAsDouble() * Constants.arm_middle_gear_ratio);
+    middleMotor.setPosition(((getMiddleCANPos() + getRightBaseCANPos())/360) * Constants.arm_middle_gear_ratio);
   }
+
 
   @Override
   public void periodic() {
@@ -164,19 +148,6 @@ public class ArmSubsystem extends SubsystemBase {
   public boolean getBeam2() {
     return beamBreaker2.get();
   }
-
-  // public double getLeftBaseCANPos() {
-  // double position = canCoderLeft.getAbsolutePosition().getValueAsDouble();
-  // return position;
-  // }
-
-  // public void setLeftBasePos(double angle) {
-  // leftBaseMotor.setControl(mMotionMagicDutyCycleBase.withPosition((angle * Constants.arm_gear_ratio) / 360).withSlot(0));
-  // }
-
-  // public double getLeftBasePos() {
-  // return (leftBaseMotor.getPosition().getValueAsDouble() / Constants.arm_gear_ratio) * 360;
-  // }
 
   public double getRightBaseCANPos() {
     double position = canCoderLeft.getAbsolutePosition().getValueAsDouble() * 360;

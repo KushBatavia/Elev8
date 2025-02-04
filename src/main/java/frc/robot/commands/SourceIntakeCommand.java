@@ -62,7 +62,7 @@ public class SourceIntakeCommand extends Command {
     }
     if(state == 2 && Math.abs(prevT - lastT) > 0.5) {
       m_spark.setArmIntakeMotor(0);
-      state = 3; //FIGURE OUT CLOSE CODE FROM HERE IDK HOW THE MECHANISM IS SUPPOSED TO WORK
+      state = 3; 
       
     }
     if(state == 3){

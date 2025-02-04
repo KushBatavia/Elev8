@@ -40,7 +40,7 @@ public class ArmShooterCommand extends Command {
     }
     if(state == 1 && Math.abs(prevT - lastT) > 0.5) {
       m_spark.setArmIntakeMotor(0);
-      state = 2; //FIGURE OUT CLOSE CODE FROM HERE IDK HOW THE MECHANISM IS SUPPOSED TO WORK
+      state = 2; 
     }
     if(state == 2){
       m_arm.setMiddlePos(SET_ANGLE_Temp);

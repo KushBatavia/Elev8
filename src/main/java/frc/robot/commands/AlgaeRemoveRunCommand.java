@@ -15,13 +15,14 @@ public class AlgaeRemoveRunCommand extends Command {
   private ArmSubsystem m_arm = new ArmSubsystem();
   private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem();
   private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
-  private double state = 0;
+  private double state;
   private double armMiddlePos;
   private double armBasePos;
   private double SET_ANGLE_Temp; //I dont have values, so these are just temporary variable created that im using everywhere.
   private double SET_POWER_Temp;//Not the same everywhere, just follow the logic dont look at the variable being used
   private double prevT;
   private double lastT;
+  private boolean returnFlag;
   /** Creates a new AlgaeRemoveRunCommand. */
   public AlgaeRemoveRunCommand(ArmSubsystem m_arm) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,7 +31,10 @@ public class AlgaeRemoveRunCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    state = 0;
+    returnFlag = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -44,19 +48,14 @@ public class AlgaeRemoveRunCommand extends Command {
     if(state == 1) {
       m_arm.setMiddlePosSlow(SET_ANGLE_Temp);
       m_arm.setBasePosSlow(SET_ANGLE_Temp);
-      if(armBasePos < SET_ANGLE_Temp || armMiddlePos < SET_ANGLE_Temp) {
+      if(armBasePos < SET_ANGLE_Temp && armMiddlePos < SET_ANGLE_Temp) {
         state = 2;
       }
       if(state == 2){
         m_spark.setArmIntakeMotor(0);
         state = 3;
       }
-      if(state == 3){
-        m_arm.setMiddlePos(SET_ANGLE_Temp);
-        m_arm.setRightBasePos(SET_ANGLE_Temp);
-        state = 4;
-        ArmSubsystem.algaeFlag = false;
-      }
+      returnFlag = true;
       
     }
   }
@@ -68,6 +67,6 @@ public class AlgaeRemoveRunCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

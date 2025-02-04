@@ -16,10 +16,6 @@ public class GroundCoralCommand extends Command {
   private double state = 0;
   private double SET_ANGLE_Temp;
   private double SET_POWER_Temp;
-  private double prevT;
-  private double lastT;
-  private double basePos;
-  private double currentThreshold;
   public GroundCoralCommand(GroundIntakeSubsystem m_ground, ArmSubsystem m_arm) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_ground = m_ground;
