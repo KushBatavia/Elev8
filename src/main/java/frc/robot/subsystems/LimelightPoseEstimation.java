@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -48,6 +49,8 @@ public class LimelightPoseEstimation extends SubsystemBase {
   private final Field2d field2d = new Field2d();
   public static Pose2d botP = new Pose2d();  
 
+  public double[] network_tables = NetworkTableInstance.getDefault().getTable("limelight-new").getEntry("botpose").getDoubleArray(new double[6]);
+
 
   public LimelightPoseEstimation(CommandSwerveDrivetrain m_swerve, Pose2d pose) {
     this.m_swerve = m_swerve; 
@@ -78,5 +81,41 @@ public class LimelightPoseEstimation extends SubsystemBase {
     double timestamp = Timer.getFPGATimestamp();
 
     // This method will be called once per scheduler run
+  }
+
+  public static Pose2d getCurrentPose() {
+    return poseEstimator.getEstimatedPosition();
+  }
+
+  public Pose2d getPose() {
+    return poseEstimator.getEstimatedPosition();
+  }
+  
+  public double getPoseX() {
+    return poseEstimator.getEstimatedPosition().getX();
+  }
+  
+  public double getPoseY() {
+    return poseEstimator.getEstimatedPosition().getY();
+  }
+
+  public double getPoseTheta() {
+    return poseEstimator.getEstimatedPosition().getRotation().getDegrees();
+  }
+  
+  public Rotation2d getPoseRotatation() {
+    return poseEstimator.getEstimatedPosition().getRotation();
+  }
+
+  public void setPose(Pose2d pose) {
+    // poseEstimator.resetPosition(m_swerve.getGyro(), m_swerve.getModulePositions(), pose);
+  }
+
+  public void IndexUpdate(int pipeline) {
+    pipelineindex = pipeline;
+  }
+
+  public void setTrajectoryField2d(Trajectory trajectory) {
+    field2d.getObject("traj").setTrajectory(trajectory);
   }
 }
