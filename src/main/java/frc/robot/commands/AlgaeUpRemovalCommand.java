@@ -56,7 +56,9 @@ public class AlgaeUpRemovalCommand extends Command {
         state = 1; 
         ArmSubsystem.algaeFlag = true;
       }    
+      ArmSubsystem.armState = 4;
       returnFlag = true;
+      
    }
   }
 

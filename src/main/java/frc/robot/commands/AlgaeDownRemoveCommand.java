@@ -16,12 +16,7 @@ public class AlgaeDownRemoveCommand extends Command {
   private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem();
   private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
   private double state = 0;
-  private double armMiddlePos;
-  private double armBasePos;
   private double SET_ANGLE_Temp; //I dont have values, so these are just temporary variable created that im using everywhere.
-  private double SET_POWER_Temp;//Not the same everywhere, just follow the logic dont look at the variable being used
-  private double prevT;
-  private double lastT;
   private boolean returnFlag;
 
   /** Creates a new AlgaeDownRemoveCommand. */
@@ -58,6 +53,7 @@ public class AlgaeDownRemoveCommand extends Command {
         state = 1; 
         ArmSubsystem.algaeFlag = true;
       }    
+      ArmSubsystem.armState = 3;
       returnFlag = true;
    }
   }

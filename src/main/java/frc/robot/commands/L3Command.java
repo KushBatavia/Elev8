@@ -41,21 +41,40 @@ public class L3Command extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(state == 0.5){
-      armMiddlePos = m_arm.getMiddleCANPos();
-      if(armMiddlePos < SET_ANGLE_Temp || armBasePos < SET_ANGLE_Temp) {
-        if(armMiddlePos < SET_ANGLE_Temp) {
-          m_arm.setMiddlePos(SET_ANGLE_Temp);
-        }
-        if(armBasePos < SET_ANGLE_Temp) {
-          m_arm.setRightBasePos(SET_ANGLE_Temp);
-        }
+    if(ArmSubsystem.armState == 1){
+      if(state == 0.5){
+        m_arm.setMiddlePos(SET_ANGLE_Temp);
         state = 1;
-        
       }
+      if(state == 1){
+        m_arm.setRightBasePos(SET_ANGLE_Temp);
+        state = 2;
+      }
+      if(state == 2){
+        m_arm.setMiddlePos(SET_ANGLE_Temp);
+        state = 3;
+      }
+      if(state == 3) {    
+        ArmSubsystem.shootFlag = true;
+        ArmSubsystem.armState = 1;
+        returnFlag = true;
+        state = 4;
+      }    
+   }else if(ArmSubsystem.armState == 2){
+      returnFlag = true;
+   }else{
+      m_arm.setMiddlePos(SET_ANGLE_Temp);
+      m_arm.setRightBasePos(SET_ANGLE_Temp);
+      state = 1;
+      if(state == 1) {    
+        ArmSubsystem.shootFlag = true;
+        ArmSubsystem.armState = 1;
+        returnFlag = true;
+      } 
     }
     if(armMiddlePos<SET_ANGLE_Temp  && armBasePos<SET_ANGLE_Temp && state == 1) {
-      ArmSubsystem.shootFlag = true; 
+      ArmSubsystem.shootFlag = true;
+      ArmSubsystem.armState = 2; 
       returnFlag = true;
     }    
     

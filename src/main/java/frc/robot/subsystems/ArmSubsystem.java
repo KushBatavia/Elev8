@@ -175,16 +175,6 @@ public class ArmSubsystem extends SubsystemBase {
     angle = Math.min(angle, MIDDLE_DOWNER_LIMIT);
     middleMotor.setControl(mMotionMagicDutyCycleMiddle.withPosition((angle * Constants.arm_middle_gear_ratio) / 360).withSlot(0));
   }
-  public void setMiddlePosSlow(double angle) {
-    angle = Math.max(angle, MIDDLE_UPPER_LIMIT);
-    angle = Math.min(angle, MIDDLE_DOWNER_LIMIT);
-    middleMotor.setControl(mMotionMagicDutyCycleMiddle.withPosition((angle * Constants.arm_middle_gear_ratio) / 360).withSlot(0));//do something to make it slow
-  }
-  public void setBasePosSlow(double angle) {
-    angle = Math.max(angle, MIDDLE_UPPER_LIMIT);
-    angle = Math.min(angle, MIDDLE_DOWNER_LIMIT);
-    rightBaseMotor.setControl(mMotionMagicDutyCycleMiddle.withPosition((angle * Constants.arm_middle_gear_ratio) / 360).withSlot(0));//do something to make it slow
-  }
 
   public double getMiddlePos() {
     return (middleMotor.getPosition().getValueAsDouble() / Constants.arm_middle_gear_ratio) * 360;

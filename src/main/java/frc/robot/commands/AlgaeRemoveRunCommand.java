@@ -45,20 +45,13 @@ public class AlgaeRemoveRunCommand extends Command {
       lastT = Timer.getFPGATimestamp();
       state = 1;
     }
-    if(state == 1) {
-      m_arm.setMiddlePosSlow(SET_ANGLE_Temp);
-      m_arm.setBasePosSlow(SET_ANGLE_Temp);
-      if(armBasePos < SET_ANGLE_Temp && armMiddlePos < SET_ANGLE_Temp) {
-        state = 2;
-      }
-      if(state == 2){
+    if(state == 1 && Math.abs(prevT - lastT) > 0.5) {
         m_spark.setArmIntakeMotor(0);
-        state = 3;
+        state = 2;
       }
       returnFlag = true;
       
     }
-  }
 
   // Called once the command ends or is interrupted.
   @Override
