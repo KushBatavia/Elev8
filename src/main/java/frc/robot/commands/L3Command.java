@@ -32,7 +32,7 @@ public class L3Command extends Command {
     returnFlag = false;
     if(m_ground.getPos()>255 || m_ground.getPos()<200) {
       state = 0.5;
-    }else{
+    } else {
       returnFlag = true;
     }
     
@@ -60,7 +60,7 @@ public class L3Command extends Command {
         returnFlag = true;
         state = 4;
       }    
-   }else if(ArmSubsystem.armState == 2){
+   } else if (ArmSubsystem.armState == 2){
       returnFlag = true;
    }else{
       m_arm.setMiddlePos(SET_ANGLE_Temp);

@@ -1,0 +1,121 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "01"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropL1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "02"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickSource"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "03"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropL3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "04"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickSource"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "03"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropL3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "04"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickSource"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "05"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropL3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "06"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickSource"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "05"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropL3"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
