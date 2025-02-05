@@ -16,6 +16,7 @@ public class GroundCoralCommand extends Command {
   private double state = 0;
   private double SET_ANGLE_Temp;
   private double SET_POWER_Temp;
+  private boolean returnFlag;
   public GroundCoralCommand(GroundIntakeSubsystem m_ground, ArmSubsystem m_arm) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_ground = m_ground;
@@ -25,8 +26,11 @@ public class GroundCoralCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    returnFlag = false;
     if(m_ground.intakeState == 1){
       state = 0.1;
+    }else{
+      returnFlag = true;
     }
     
   }
@@ -52,6 +56,7 @@ public class GroundCoralCommand extends Command {
     if(state ==2 && m_ground.getBeamBreaker1()){
       m_ground.setIntakeMotor(0);
       m_ground.intakeState = m_ground.intakeState*-1;
+      returnFlag = true;
     }
   }
 
@@ -62,6 +67,6 @@ public class GroundCoralCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

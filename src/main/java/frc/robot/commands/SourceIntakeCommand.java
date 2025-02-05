@@ -22,6 +22,7 @@ public class SourceIntakeCommand extends Command {
   private double SET_POWER_Temp;
   private double prevT;
   private double lastT;
+  private boolean returnFlag;
   
   /** Creates a new SourceIntakeCommand. */
   public SourceIntakeCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
@@ -34,8 +35,12 @@ public class SourceIntakeCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    returnFlag = false;
+    ArmSubsystem.algaeFlag = false;
     if(m_groundIntake.getPos()>255 || m_groundIntake.getPos()<200) {
       state = 0.5;
+    }else{
+      returnFlag = true;
     }
   }
 
@@ -68,6 +73,7 @@ public class SourceIntakeCommand extends Command {
     if(state == 3){
       m_arm.setMiddlePos(SET_ANGLE_Temp);
       m_arm.setRightBasePos(SET_ANGLE_Temp);
+      returnFlag = true;
     }
   }
 
@@ -78,6 +84,6 @@ public class SourceIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

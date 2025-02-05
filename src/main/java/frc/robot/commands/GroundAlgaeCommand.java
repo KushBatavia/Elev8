@@ -19,6 +19,7 @@ public class GroundAlgaeCommand extends Command {
   private double prevT;
   private double lastT;
   private double currentThreshold;
+  private boolean returnFlag;
   public GroundAlgaeCommand(GroundIntakeSubsystem m_ground, ArmSubsystem m_arm) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_ground = m_ground;
@@ -28,8 +29,11 @@ public class GroundAlgaeCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    returnFlag = false;
     if(m_ground.intakeState == 1){
       state = 0.1;
+    }else{
+      returnFlag = true;
     }
   }
 
@@ -58,6 +62,7 @@ public class GroundAlgaeCommand extends Command {
     if(state ==2 && m_ground.getCurrent()>currentThreshold && Math.abs(prevT - lastT) > 0.5) {
       m_ground.setIntakeMotor(0);
       m_ground.intakeState = m_ground.intakeState*-1;
+      returnFlag = true;
     }
   }
 
@@ -68,6 +73,6 @@ public class GroundAlgaeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

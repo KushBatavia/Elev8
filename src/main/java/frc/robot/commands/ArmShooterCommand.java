@@ -18,6 +18,7 @@ public class ArmShooterCommand extends Command {
   private double lastT;
   private double SET_ANGLE_Temp;
   private double SET_POWER_Temp;
+  private boolean returnFlag;
   /** Creates a new ArmShooterCommand. */
   public ArmShooterCommand(ArmSubsystem m_arm, SparkMaxSubsystem m_spark) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -27,7 +28,10 @@ public class ArmShooterCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    ArmSubsystem.algaeFlag = false;
+    returnFlag = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -45,6 +49,7 @@ public class ArmShooterCommand extends Command {
     if(state == 2){
       m_arm.setMiddlePos(SET_ANGLE_Temp);
       m_arm.setRightBasePos(SET_ANGLE_Temp);
+      returnFlag = true;
     }
 
   }
@@ -56,6 +61,6 @@ public class ArmShooterCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

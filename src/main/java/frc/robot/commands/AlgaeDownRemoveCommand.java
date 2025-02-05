@@ -34,6 +34,7 @@ public class AlgaeDownRemoveCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    ArmSubsystem.algaeFlag = false;
     returnFlag = false;
     if(m_ground.getPos()>SET_ANGLE_Temp && m_ground.getPos()<SET_ANGLE_Temp) {
       state = 0.5;

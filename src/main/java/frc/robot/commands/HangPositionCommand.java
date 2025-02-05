@@ -18,6 +18,7 @@ public class HangPositionCommand extends Command {
   private double armBasePos;
   private double SET_ANGLE_Temp;
   private double SET_POWER_Temp;
+  private boolean returnFlag;
   public HangPositionCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
@@ -27,8 +28,11 @@ public class HangPositionCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    returnFlag = false;
     if(m_ground.getPos()>255 || m_ground.getPos()<200) {
       state = 0.5;
+    }else{
+      returnFlag = true;
     }
     
   }
@@ -38,6 +42,10 @@ public class HangPositionCommand extends Command {
   public void execute() {
     if(state == 0.5){
       //Figure out which motors are being used
+      state = 1;
+    }
+    if(state == 1){
+      returnFlag = true;
     }
   }
 
@@ -48,6 +56,6 @@ public class HangPositionCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

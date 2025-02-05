@@ -17,9 +17,7 @@ public class L3Command extends Command {
   private double armMiddlePos;
   private double armBasePos;
   private double SET_ANGLE_Temp;
-  private double SET_POWER_Temp;
-  private double prevT;
-  private double lastT;
+  private boolean returnFlag;
   /** Creates a new L3Command. */
   public L3Command(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -31,8 +29,11 @@ public class L3Command extends Command {
   @Override
   public void initialize() {
     ArmSubsystem.algaeFlag = false;
+    returnFlag = false;
     if(m_ground.getPos()>255 || m_ground.getPos()<200) {
       state = 0.5;
+    }else{
+      returnFlag = true;
     }
     
   }
@@ -50,12 +51,14 @@ public class L3Command extends Command {
           m_arm.setRightBasePos(SET_ANGLE_Temp);
         }
         state = 1;
+        
       }
     }
-    prevT = Timer.getFPGATimestamp();
     if(armMiddlePos<SET_ANGLE_Temp  && armBasePos<SET_ANGLE_Temp && state == 1) {
-      ArmSubsystem.shootFlag = true;
+      ArmSubsystem.shootFlag = true; 
+      returnFlag = true;
     }    
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -65,6 +68,6 @@ public class L3Command extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
@@ -17,9 +16,7 @@ public class L2Command extends Command {
   private double armMiddlePos;
   private double armBasePos;
   private double SET_ANGLE_Temp;
-  private double SET_POWER_Temp;
-  private double prevT;
-  private double lastT;
+  private boolean returnFlag;
   /** Creates a new L2Command. */
   public L2Command(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,8 +27,12 @@ public class L2Command extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    returnFlag = false;
+    ArmSubsystem.algaeFlag = false;
     if(m_ground.getPos()>255 || m_ground.getPos()<200) {
       state = 0.5;
+    }else{
+      returnFlag = true; 
     }
     
   }
@@ -51,9 +52,9 @@ public class L2Command extends Command {
         state = 1;
       }
     }
-    prevT = Timer.getFPGATimestamp();
     if(armMiddlePos<SET_ANGLE_Temp  && armBasePos<SET_ANGLE_Temp && state == 1) {    
       ArmSubsystem.shootFlag = true;
+      returnFlag = true;
     }    
   }
 
@@ -64,6 +65,6 @@ public class L2Command extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

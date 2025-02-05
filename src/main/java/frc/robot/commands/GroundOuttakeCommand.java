@@ -21,6 +21,7 @@ public class GroundOuttakeCommand extends Command {
   private double lastT;
   private double basePos;
   private double currentThreshold;
+  private boolean returnFlag;
   public GroundOuttakeCommand(GroundIntakeSubsystem m_ground, ArmSubsystem m_arm) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
@@ -30,8 +31,11 @@ public class GroundOuttakeCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    returnFlag = false;
     if(m_ground.intakeState == -1){
       state = 0.1;
+    }else{
+      returnFlag = true;
     }
     
   }
@@ -68,6 +72,7 @@ public class GroundOuttakeCommand extends Command {
     if(state ==2 && Math.abs(lastT - prevT) > 0.2){
       m_ground.setIntakeMotor(0);
       m_ground.intakeState = m_ground.intakeState*-1;
+      returnFlag = true;
     }
   }
 
@@ -78,6 +83,6 @@ public class GroundOuttakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

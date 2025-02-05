@@ -19,6 +19,7 @@ public class StrafeCommand extends Command {
   private final CommandXboxController joystick;
   private boolean leftDPad = false;
   private boolean rightDPad = false;
+  private boolean returnFlag;
 
   public StrafeCommand(CommandSwerveDrivetrain drivetrain, CommandXboxController joystick) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,7 +30,9 @@ public class StrafeCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    returnFlag = false;
+  }
 
   public void execute() {
     joystick.pov(90).whileTrue(new InstantCommand(() -> {
@@ -43,7 +46,10 @@ public class StrafeCommand extends Command {
         drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0));
     } else if (rightDPad) {
         drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0));
-    } 
+    } else if(!leftDPad || !rightDPad) {
+        returnFlag = true;
+
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -53,6 +59,6 @@ public class StrafeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return returnFlag;
   }
 }

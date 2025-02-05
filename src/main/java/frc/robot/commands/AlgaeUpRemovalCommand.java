@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
@@ -32,6 +31,7 @@ public class AlgaeUpRemovalCommand extends Command {
   @Override
   public void initialize() {
     returnFlag = false;
+    ArmSubsystem.algaeFlag = false;
     if(m_ground.getPos()>SET_ANGLE_Temp || m_ground.getPos()<SET_ANGLE_Temp) {
       state = 0.5;
     }else{
