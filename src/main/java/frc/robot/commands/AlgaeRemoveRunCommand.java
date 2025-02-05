@@ -12,8 +12,6 @@ import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeRemoveRunCommand extends Command {
-  private ArmSubsystem m_arm = new ArmSubsystem();
-  private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem();
   private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
   private double state;
   private double armMiddlePos;
@@ -24,9 +22,9 @@ public class AlgaeRemoveRunCommand extends Command {
   private double lastT;
   private boolean returnFlag;
   /** Creates a new AlgaeRemoveRunCommand. */
-  public AlgaeRemoveRunCommand(ArmSubsystem m_arm) {
+  public AlgaeRemoveRunCommand(SparkMaxSubsystem m_arm) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_arm = m_arm;
+    this.m_spark = m_spark;
   }
 
   // Called when the command is initially scheduled.
@@ -50,7 +48,6 @@ public class AlgaeRemoveRunCommand extends Command {
         state = 2;
       }
       returnFlag = true;
-      
     }
 
   // Called once the command ends or is interrupted.
