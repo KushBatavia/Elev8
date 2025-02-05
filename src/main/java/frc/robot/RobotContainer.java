@@ -8,9 +8,13 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,7 +41,8 @@ import frc.robot.subsystems.SparkMaxSubsystem;
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.1; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-    
+    private final SendableChooser<Command> autoChooser;
+
 
     public ArmSubsystem armSubsystem = new ArmSubsystem();
     public GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
@@ -72,6 +77,17 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
+
+        autoChooser = AutoBuilder.buildAutoChooser("4L3.auto");
+
+        // NamedCommands.registerCommand("autoBalance"));
+        // NamedCommands.registerCommand("exampleCommand"));
+        // NamedCommands.registerCommand("someOtherCommand", new SomeOtherCommand());
+
+        // Another option that allows you to specify the default auto by its name
+        // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+        // CHECKING AUTO CHOOSER
+        SmartDashboard.putData("Auto Chooser", autoChooser);
     }
     private void configureBindings() {
 

@@ -74,8 +74,8 @@ public class SourceIntakeCommand extends Command {
       m_arm.setMiddlePos(SET_ANGLE_Temp);
       m_arm.setRightBasePos(SET_ANGLE_Temp);
       ArmSubsystem.armState = 5;
-      returnFlag = true;
     }
+    returnFlag = true;
   }
 
   // Called once the command ends or is interrupted.
