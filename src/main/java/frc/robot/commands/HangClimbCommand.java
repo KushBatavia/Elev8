@@ -38,7 +38,7 @@ public class HangClimbCommand extends Command {
   @Override
   public void execute() {
     if(state == 0.5){
-      //Figure out which motors are being used
+      m_arm.setHangarMotorPower(SET_POWER_Temp);
     }
   }
 

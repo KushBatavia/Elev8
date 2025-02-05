@@ -37,19 +37,18 @@ public class ArmSubsystem extends SubsystemBase {
   // CHANGE ALL CAN IDS
   public TalonFX leftBaseMotor = new TalonFX(21, "rio"); // Left Motor is the follower
   public TalonFX rightBaseMotor = new TalonFX(22, "rio"); // Right Motor is the master
-  // public Follower leftBaseMotorFollower = new Follower(BASE_CAN_ID, true);
   public TalonFX middleMotor = new TalonFX(23, "rio");
+  public TalonFX hangarMotor = new TalonFX(51, "rio");
   public CANcoder canCoderLeft = new CANcoder(24, "rio");
-  // public CANcoder canCoderRight = new CANcoder(2, "rio");
   public CANcoder canCoderMiddle = new CANcoder(25, "rio");
+
+
   public DigitalInput beamBreaker1 = new DigitalInput(1);
   public DigitalInput beamBreaker2 = new DigitalInput(2);
-  SparkMaxConfig config = new SparkMaxConfig();
 
   public MotionMagicDutyCycle mMotionMagicDutyCycleBase;
   public MotionMagicDutyCycle mMotionMagicDutyCycleMiddle;
-  public MotionMagicVoltage mMotionMagicVoltageBase;
-  public MotionMagicVoltage mMotionMagicVoltageMiddle;
+  public MotionMagicDutyCycle mMotionMagicDutyCycleHangar;
   
 
   public static final double BASE_UPPER_LIMIT = 0;
@@ -84,7 +83,7 @@ public class ArmSubsystem extends SubsystemBase {
     rightBaseMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
     rightBaseMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
     rightBaseMotorTalonConfigs.Slot0.withKP(0.2);
-    // rightBaseMotorTalonConfigs.Slot0.withKG(0);
+    // rightBaseMotorTalonConfigs.Slot0.withKG(0); 
     rightBaseMotorTalonConfigs.Slot0.withKI(0);
     rightBaseMotorTalonConfigs.Slot0.withKD(0);
 
@@ -107,6 +106,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     middleMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
     middleMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
+
     middleMotorTalonConfigs.Slot0.withKP(0.2);
     // middleMotorTalonConfigs.Slot0.withKG(0);
     middleMotorTalonConfigs.Slot0.withKI(0);
@@ -122,6 +122,27 @@ public class ArmSubsystem extends SubsystemBase {
     // PositionDutyCycle middleMotorPositionDutyCycle = new PositionDutyCycle(0);
     middleMotor.getConfigurator().apply(middleMotorTalonConfigs, 0.050);
     middleMotor.setPosition(((getMiddleCANPos() + getRightBaseCANPos())/360) * Constants.arm_middle_gear_ratio);
+
+    // Hangar Motor Config
+    hangarMotor.getConfigurator().apply(new TalonFXConfiguration());
+    TalonFXConfiguration hangarMotorTalonConfigs = new TalonFXConfiguration();
+    hangarMotorTalonConfigs = new TalonFXConfiguration();
+
+    hangarMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.6);
+    hangarMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.6);
+
+    hangarMotorTalonConfigs.Slot0.withKP(0.5); // .52O
+    // hangarMotorTalonConfigs.Slot0.withKG(0.03);
+    hangarMotorTalonConfigs.Slot0.withKI(0);
+    hangarMotorTalonConfigs.Slot0.withKD(0);
+
+    hangarMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
+    hangarMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+
+    hangarMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(80);
+    hangarMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(150);
+
+    hangarMotor.getConfigurator().apply(hangarMotorTalonConfigs, 0.050);
   }
 
 
@@ -147,6 +168,10 @@ public class ArmSubsystem extends SubsystemBase {
 
   public boolean getBeam2() {
     return beamBreaker2.get();
+  }
+
+  public void setHangarMotorPower(double power){
+    hangarMotor.set(power);
   }
 
   public double getRightBaseCANPos() {
