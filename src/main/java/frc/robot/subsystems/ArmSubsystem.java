@@ -157,16 +157,19 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Middle Motor Reading", (getMiddlePos()));
     SmartDashboard.putNumber("Middle CANCoder", (getMiddleCANPos()));
 
+    SmartDashboard.putBoolean("intake beam breaker", getBeamIntake());
+    SmartDashboard.putBoolean("outtake beam breaker", getBeamOuttake());
+
     // This method will be called once per scheduler run
   }
 
   
 
-  public boolean getBeam1() {
+  public boolean getBeamIntake() {//gets intake beam
     return beamBreaker1.get();
   }
 
-  public boolean getBeam2() {
+  public boolean getBeamOuttake() {//gets outtake beam
     return beamBreaker2.get();
   }
 
