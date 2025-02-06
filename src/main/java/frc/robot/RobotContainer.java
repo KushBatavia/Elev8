@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlgaeDownRemoveCommand;
@@ -110,13 +112,16 @@ public class RobotContainer {
             // armSubsystem.setMiddlePos(95);
             // armSubsystem.setRightBasePos(230);
         }));
+        
+        joystick.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
+        joystick.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
 
         joystick.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
         joystick.x().onTrue(new GroundOuttakeCommand(groundIntake, armSubsystem));
         joystick.b().onTrue(new L2Command(armSubsystem, groundIntake));
         joystick.y().onTrue(new L3Command(armSubsystem, groundIntake));
-        joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
-        joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem, sparkMax));
+        //joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
+        //joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem, sparkMax));
         joystick.pov(90).whileTrue(new StrafeCommand(drivetrain, joystick));
         joystick.pov(270).whileTrue(new StrafeCommand(drivetrain, joystick));
         joystick.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));

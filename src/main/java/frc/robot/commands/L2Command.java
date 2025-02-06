@@ -7,21 +7,26 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
+import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class L2Command extends Command {
   private ArmSubsystem m_arm = new ArmSubsystem();
   private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem(); 
+  private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
   private double state = 0;
   private double armMiddlePos;
   private double armBasePos;
   private double SET_ANGLE_Temp;
   private boolean returnFlag;
+  
+
   /** Creates a new L2Command. */
-  public L2Command(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
+  public L2Command(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
     this.m_ground = m_ground;
+    this.m_spark = m_spark;
   }
 
   // Called when the command is initially scheduled.
@@ -29,6 +34,7 @@ public class L2Command extends Command {
   public void initialize() {
     returnFlag = false;
     ArmSubsystem.algaeFlag = false;
+    m_spark.setArmIntakeMotor(0);
     armMiddlePos = m_arm.getMiddleCANPos();
     if(m_ground.getPos()>255 || m_ground.getPos()<200) {
       state = 0.5;
@@ -46,11 +52,11 @@ public class L2Command extends Command {
         m_arm.setRightBasePos(SET_ANGLE_Temp);
         state = 1;
       }
-      if(state == 1){
+      if(state == 1 && Math.abs(m_arm.getMiddleCANPos() - SET_ANGLE_Temp)<3){
         m_arm.setMiddlePos(SET_ANGLE_Temp);
         state = 2;
       }
-      if(state == 2){
+      if(state == 2 && Math.abs(m_arm.getMiddleCANPos() - SET_ANGLE_Temp)<3){
         m_arm.setRightBasePos(SET_ANGLE_Temp);
         state = 3;
       }
@@ -63,8 +69,8 @@ public class L2Command extends Command {
    }else if(ArmSubsystem.armState == 1){
     returnFlag = true;
    }else{
-    m_arm.setMiddlePos(SET_ANGLE_Temp);
-    m_arm.setRightBasePos(SET_ANGLE_Temp);
+    m_arm.setMiddlePos(353);
+    m_arm.setRightBasePos(208);
     state = 1;
     if(state == 1) {    
       ArmSubsystem.shootFlag = true;

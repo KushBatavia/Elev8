@@ -17,7 +17,6 @@ public class AlgaeDownRemoveCommand extends Command {
   private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
   private double state = 0;
   private double SET_ANGLE_Temp; //I dont have values, so these are just temporary variable created that im using everywhere.
-  private boolean returnFlag;
 
   /** Creates a new AlgaeDownRemoveCommand. */
   public AlgaeDownRemoveCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
@@ -29,33 +28,18 @@ public class AlgaeDownRemoveCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    ArmSubsystem.algaeFlag = false;
-    returnFlag = false;
-    if(m_ground.getPos()>SET_ANGLE_Temp && m_ground.getPos()<SET_ANGLE_Temp) {
-      state = 0.5;
-    }else{
-      returnFlag = true;
-    }
+    m_arm.setMiddlePos(SET_ANGLE_Temp);
+    m_arm.setRightBasePos(SET_ANGLE_Temp);
+    state = 1; 
+    ArmSubsystem.algaeFlag = true;    
+    ArmSubsystem.armState = 3;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(state == 0.5){
       //SET THE MOTORS TO THE STARTING VALUES
-      if(m_arm.getMiddleCANPos() < SET_ANGLE_Temp || m_arm.getRightBaseCANPos() < SET_ANGLE_Temp) {
-        if(m_arm.getMiddleCANPos() < SET_ANGLE_Temp) {
-          m_arm.setMiddlePos(SET_ANGLE_Temp);
-        }
-        if(m_arm.getRightBaseCANPos() < SET_ANGLE_Temp) {
-          m_arm.setRightBasePos(SET_ANGLE_Temp);
-        }
-        state = 1; 
-        ArmSubsystem.algaeFlag = true;
-      }    
-      ArmSubsystem.armState = 3;
-      returnFlag = true;
-   }
+      
   }
 
   // Called once the command ends or is interrupted.
@@ -65,6 +49,6 @@ public class AlgaeDownRemoveCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnFlag;
+    return true;
   }
 }

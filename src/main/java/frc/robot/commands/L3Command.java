@@ -8,27 +8,31 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
+import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class L3Command extends Command {
   private ArmSubsystem m_arm = new ArmSubsystem();
   private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem(); 
+  private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
   private double state = 0;
   private double armMiddlePos;
   private double armBasePos;
   private double SET_ANGLE_Temp;
   private boolean returnFlag;
   /** Creates a new L3Command. */
-  public L3Command(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
+  public L3Command(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
     this.m_ground = m_ground;
+    this.m_spark = m_spark;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     ArmSubsystem.algaeFlag = false;
+    m_spark.setArmIntakeMotor(0);
     returnFlag = false;
     if(m_ground.getPos()>255 || m_ground.getPos()<200) {
       state = 0.5;
@@ -46,11 +50,11 @@ public class L3Command extends Command {
         m_arm.setMiddlePos(SET_ANGLE_Temp);
         state = 1;
       }
-      if(state == 1){
+      if(state == 1 && Math.abs(m_arm.getMiddleCANPos() - SET_ANGLE_Temp)<3){
         m_arm.setRightBasePos(SET_ANGLE_Temp);
         state = 2;
       }
-      if(state == 2){
+      if(state == 2 && Math.abs(m_arm.getMiddleCANPos() - SET_ANGLE_Temp)<3){
         m_arm.setMiddlePos(SET_ANGLE_Temp);
         state = 3;
       }
