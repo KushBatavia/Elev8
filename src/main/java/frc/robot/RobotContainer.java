@@ -128,10 +128,10 @@ public class RobotContainer {
         //check for algae removal upper and downer
 
         joystick2.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
-        joystick2.leftBumper().onTrue(new GroundAlgaeCommand(groundIntake, armSubsystem));
+        joystick2.leftBumper().onTrue(new GroundAlgaeCommand(groundIntake));
         joystick2.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
         joystick2.y().onTrue(new AlgaeUpRemovalCommand(armSubsystem));
-        joystick2.x().onTrue(new AlgaeDownRemoveCommand(armSubsystem, groundIntake));
+        joystick2.x().onTrue(new AlgaeDownRemoveCommand(armSubsystem));
         joystick2.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));
         joystick2.pov(0).onTrue(new HangPositionCommand(armSubsystem, groundIntake));
     }
