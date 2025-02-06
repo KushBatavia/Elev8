@@ -31,28 +31,17 @@ public class GroundOuttakeCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    returnFlag = false;
-    if(m_ground.intakeState == -1){
-      state = 0.1;
-    }else{
-      returnFlag = true;
-    }
-    
+    returnFlag = false;    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(state == 0.1){
-      if(m_arm.getMiddleCANPos() < SET_ANGLE_Temp || m_arm.getRightBaseCANPos() < SET_ANGLE_Temp) {
-        m_arm.setMiddlePos(SET_ANGLE_Temp);  
-        m_arm.setRightBasePos(SET_ANGLE_Temp);
-      }
-        state = 0.5;
-    }
-    if(state == 0.5){
+    if(GroundIntakeSubsystem.intakeState == -1){
       m_ground.setPos(SET_ANGLE_Temp);
       state = 1;
+    }else{
+      returnFlag = true;
     }
     prevT = Timer.getFPGATimestamp();
     if(state ==1 && m_ground.getPos() > SET_ANGLE_Temp) {
@@ -69,9 +58,9 @@ public class GroundOuttakeCommand extends Command {
       state = 2;
       lastT = Timer.getFPGATimestamp();
     }
-    if(state ==2 && Math.abs(lastT - prevT) > 0.2){
+    if(state ==2 && Math.abs(lastT - prevT) > 0.5){
       m_ground.setIntakeMotor(0);
-      m_ground.intakeState = m_ground.intakeState*-1;
+      GroundIntakeSubsystem.intakeState = GroundIntakeSubsystem.intakeState*-1;
       returnFlag = true;
     }
   }

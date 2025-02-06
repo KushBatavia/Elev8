@@ -6,61 +6,30 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.GroundIntakeSubsystem;
-import frc.robot.subsystems.SparkMaxSubsystem;
-
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeUpRemovalCommand extends Command {
   private ArmSubsystem m_arm = new ArmSubsystem();
-  private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem();
-  private SparkMaxSubsystem m_spark = new SparkMaxSubsystem(); 
-  private double state = 0;
-  private double armMiddlePos;
-  private double armBasePos;
   private double SET_ANGLE_Temp;
   private boolean returnFlag;
   /** Creates a new AlgaeUpRemovalCommand. */
-  public AlgaeUpRemovalCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
+  public AlgaeUpRemovalCommand(ArmSubsystem m_arm) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
-    this.m_ground = m_ground;
-    this.m_spark = m_spark;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    returnFlag = false;
-    ArmSubsystem.algaeFlag = false;
-    if(m_ground.getPos()>SET_ANGLE_Temp || m_ground.getPos()<SET_ANGLE_Temp) {
-      state = 0.5;
-    }else{
-      returnFlag = true;
-    }
+    m_arm.setMiddlePos(SET_ANGLE_Temp);
+    m_arm.setRightBasePos(SET_ANGLE_Temp);
+    ArmSubsystem.algaeFlag = true;    
+    ArmSubsystem.armState = 3;
     
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    if(state == 0.5){
-      armMiddlePos = m_arm.getMiddleCANPos();
-      //SET THE MOTORS TO THE STARTING VALUES
-      if(armMiddlePos < SET_ANGLE_Temp || armBasePos < SET_ANGLE_Temp) {
-        if(armMiddlePos < SET_ANGLE_Temp) {
-          m_arm.setMiddlePos(SET_ANGLE_Temp);
-        }
-        if(armBasePos < SET_ANGLE_Temp) {
-          m_arm.setRightBasePos(SET_ANGLE_Temp);
-        }
-        state = 1; 
-        ArmSubsystem.algaeFlag = true;
-      }    
-      ArmSubsystem.armState = 4;
-      returnFlag = true;
-      
-   }
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

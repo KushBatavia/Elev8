@@ -118,8 +118,8 @@ public class RobotContainer {
 
         joystick.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
         joystick.x().onTrue(new GroundOuttakeCommand(groundIntake, armSubsystem));
-        joystick.b().onTrue(new L2Command(armSubsystem, groundIntake));
-        joystick.y().onTrue(new L3Command(armSubsystem, groundIntake));
+        joystick.b().onTrue(new L2Command(armSubsystem, groundIntake, sparkMax));
+        joystick.y().onTrue(new L3Command(armSubsystem, groundIntake, sparkMax));
         //joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
         //joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem, sparkMax));
         joystick.pov(90).whileTrue(new StrafeCommand(drivetrain, joystick));

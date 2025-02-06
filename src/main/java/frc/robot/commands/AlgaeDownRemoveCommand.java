@@ -4,25 +4,19 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
-import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeDownRemoveCommand extends Command {
   private ArmSubsystem m_arm = new ArmSubsystem();
-  private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem();
-  private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
-  private double state = 0;
   private double SET_ANGLE_Temp; //I dont have values, so these are just temporary variable created that im using everywhere.
 
   /** Creates a new AlgaeDownRemoveCommand. */
-  public AlgaeDownRemoveCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
+  public AlgaeDownRemoveCommand(ArmSubsystem m_arm) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
-    this.m_ground = m_ground;
   }
 
   // Called when the command is initially scheduled.
@@ -30,17 +24,13 @@ public class AlgaeDownRemoveCommand extends Command {
   public void initialize() {
     m_arm.setMiddlePos(SET_ANGLE_Temp);
     m_arm.setRightBasePos(SET_ANGLE_Temp);
-    state = 1; 
     ArmSubsystem.algaeFlag = true;    
     ArmSubsystem.armState = 3;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-      //SET THE MOTORS TO THE STARTING VALUES
-      
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

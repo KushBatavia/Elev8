@@ -36,7 +36,7 @@ public class L2Command extends Command {
     ArmSubsystem.algaeFlag = false;
     m_spark.setArmIntakeMotor(0);
     armMiddlePos = m_arm.getMiddleCANPos();
-    if(m_ground.getPos()>255 || m_ground.getPos()<200) {
+    if(ArmSubsystem.armState!=1) {
       state = 0.5;
     }else{
       returnFlag = true; 
@@ -48,10 +48,8 @@ public class L2Command extends Command {
   @Override
   public void execute() {
     if(ArmSubsystem.armState == 2){
-      if(state == 0.5){
-        m_arm.setRightBasePos(SET_ANGLE_Temp);
-        state = 1;
-      }
+      m_arm.setRightBasePos(SET_ANGLE_Temp);
+      state = 1;
       if(state == 1 && Math.abs(m_arm.getMiddleCANPos() - SET_ANGLE_Temp)<3){
         m_arm.setMiddlePos(SET_ANGLE_Temp);
         state = 2;

@@ -7,7 +7,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.GroundIntakeSubsystem;
 import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -22,7 +21,7 @@ public class AlgaeRemoveRunCommand extends Command {
   private double lastT;
   private boolean returnFlag;
   /** Creates a new AlgaeRemoveRunCommand. */
-  public AlgaeRemoveRunCommand(SparkMaxSubsystem m_arm) {
+  public AlgaeRemoveRunCommand(SparkMaxSubsystem m_spark) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_spark = m_spark;
   }

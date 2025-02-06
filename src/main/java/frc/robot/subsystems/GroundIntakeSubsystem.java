@@ -27,7 +27,7 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   private final double UPPER_LIMIT = 0;
   private final double DOWNER_LIMIT = 0;
 
-  public double intakeState = 1;
+  public static double intakeState = 1;
 
   
   /** Creates a new IntakeSubsystem. */
