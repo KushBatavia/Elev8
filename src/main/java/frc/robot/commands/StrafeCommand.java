@@ -46,9 +46,8 @@ public class StrafeCommand extends Command {
         drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0));
     } else if (rightDPad) {
         drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0));
-    } else if(!leftDPad || !rightDPad) {
+    } else if(!leftDPad && !rightDPad) {
         returnFlag = true;
-
     }
   }
 
