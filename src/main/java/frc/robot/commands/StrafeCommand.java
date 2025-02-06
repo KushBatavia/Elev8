@@ -43,9 +43,9 @@ public class StrafeCommand extends Command {
     }));
     
     if (leftDPad) {
-        drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0));
+        drivetrain.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0));
     } else if (rightDPad) {
-        drivetrain.setControl(new SwerveRequest.RobotCentric().withVelocityX(0));
+        drivetrain.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0));
     } else if(!leftDPad && !rightDPad) {
         returnFlag = true;
     }
