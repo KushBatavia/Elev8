@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 import frc.robot.subsystems.SparkMaxSubsystem;
@@ -32,6 +33,7 @@ public class L2Command extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Constants.killFlag = false;
     returnFlag = false;
     ArmSubsystem.algaeFlag = false;
     m_spark.setArmIntakeMotor(0);
@@ -48,14 +50,11 @@ public class L2Command extends Command {
   @Override
   public void execute() {
     if(ArmSubsystem.armState == 2){
-      m_arm.setRightBasePos(SET_ANGLE_Temp);
+      m_arm.setRightBasePos(225);
       state = 1;
-      if(state == 1 && Math.abs(m_arm.getMiddleCANPos() - SET_ANGLE_Temp)<3){
-        m_arm.setMiddlePos(SET_ANGLE_Temp);
-        state = 2;
-      }
-      if(state == 2 && Math.abs(m_arm.getMiddleCANPos() - SET_ANGLE_Temp)<3){
-        m_arm.setRightBasePos(SET_ANGLE_Temp);
+      if(state == 1 && Math.abs(m_arm.getRightBasePos() - 225)<3){
+        m_arm.setMiddlePos(359);
+        m_arm.setRightBasePos(213);
         state = 3;
       }
       if(state == 3) {    
@@ -68,7 +67,7 @@ public class L2Command extends Command {
     returnFlag = true;
    }else{
     m_arm.setMiddlePos(353);
-    m_arm.setRightBasePos(208);
+    m_arm.setRightBasePos(210);
     state = 1;
     if(state == 1) {    
       ArmSubsystem.shootFlag = true;
@@ -85,6 +84,6 @@ public class L2Command extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnFlag;
+    return returnFlag||Constants.killFlag;
   }
-}
+} 

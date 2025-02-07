@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 
@@ -28,23 +29,24 @@ public class HangPositionCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    returnFlag = false;
-    if(m_ground.getPos()>255 || m_ground.getPos()<200) {
-      state = 0.5;
-    }else{
-      returnFlag = true;
-    }
-    
+    state = 0;
+    m_arm.setMiddlePos(393+40);
+    m_arm.setRightBasePos(193);
+    Constants.killFlag = false;
+    returnFlag = false;    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(state == 0.5){
+    if(m_arm.getRightBasePos() < 230 state == 0){
+    // SET ARM INTAKE MOTOR FOR SMTH IDK
       //Figure out which motors are being used
       state = 1;
     }
     if(state == 1){
+      m_ground.setPos(100);
+      state = 2; 
       returnFlag = true;
     }
   }
@@ -56,6 +58,6 @@ public class HangPositionCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnFlag;
+    return returnFlag||Constants.killFlag;
   }
 }

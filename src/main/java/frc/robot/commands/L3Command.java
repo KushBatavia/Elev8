@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 import frc.robot.subsystems.SparkMaxSubsystem;
@@ -31,14 +32,10 @@ public class L3Command extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Constants.killFlag = false;
     ArmSubsystem.algaeFlag = false;
     m_spark.setArmIntakeMotor(0);
     returnFlag = false;
-    if(m_ground.getPos()>255 || m_ground.getPos()<200) {
-      state = 0.5;
-    }else{
-      returnFlag = true;
-    }
     
   }
 
@@ -47,14 +44,11 @@ public class L3Command extends Command {
   public void execute() {
     if(ArmSubsystem.armState == 1){
       if(state == 0.5){
-        m_arm.setMiddlePos(SET_ANGLE_Temp);
+        m_arm.setRightBasePos(217);
         state = 1;
       }
-      if(state == 1 && Math.abs(m_arm.getMiddleCANPos() - SET_ANGLE_Temp)<3){
-        m_arm.setRightBasePos(SET_ANGLE_Temp);
-        state = 2;
-      }
-      if(state == 2 && Math.abs(m_arm.getMiddleCANPos() - SET_ANGLE_Temp)<3){
+      if(state == 1 && Math.abs(m_arm.getMiddleCANPos() - 217)<3){
+        m_arm.setRightBasePos(SET_ANGLE_Temp);//HES SET THIS TO THE SAME ANGLE AS L2. WHAT DO I DO NOW
         m_arm.setMiddlePos(SET_ANGLE_Temp);
         state = 3;
       }
@@ -67,8 +61,8 @@ public class L3Command extends Command {
    }else if(ArmSubsystem.armState == 2){
       returnFlag = true;
    }else{
-      m_arm.setMiddlePos(SET_ANGLE_Temp);
-      m_arm.setRightBasePos(SET_ANGLE_Temp);
+      m_arm.setMiddlePos(393);
+      m_arm.setRightBasePos(190);
       state = 1;
       if(state == 1) {    
         ArmSubsystem.shootFlag = true;
@@ -91,6 +85,6 @@ public class L3Command extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnFlag;
+    return returnFlag||Constants.killFlag;
   }
 }

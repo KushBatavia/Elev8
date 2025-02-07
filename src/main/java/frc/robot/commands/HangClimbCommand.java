@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 
@@ -28,17 +29,15 @@ public class HangClimbCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(m_ground.getPos()>255 || m_ground.getPos()<200) {
-      state = 0.5;
-    }
-    
+    Constants.killFlag = false;
+    state = 0.5; 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(state == 0.5){
-      m_arm.setHangarMotorPower(SET_POWER_Temp);
+      m_arm.setHangarMotorPower(-0.1);
     }
   }
 
@@ -49,6 +48,6 @@ public class HangClimbCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return false||Constants.killFlag;
   }
 }

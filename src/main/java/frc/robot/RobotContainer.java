@@ -26,6 +26,7 @@ import frc.robot.commands.GroundCoralCommand;
 import frc.robot.commands.GroundOuttakeCommand;
 import frc.robot.commands.HangClimbCommand;
 import frc.robot.commands.HangPositionCommand;
+import frc.robot.commands.KillCommand;
 import frc.robot.commands.L2Command;
 import frc.robot.commands.L3Command;
 import frc.robot.commands.SourceIntakeCommand;
@@ -120,15 +121,15 @@ public class RobotContainer {
         joystick.x().onTrue(new GroundOuttakeCommand(groundIntake, armSubsystem));
         joystick.b().onTrue(new L2Command(armSubsystem, groundIntake, sparkMax));
         joystick.y().onTrue(new L3Command(armSubsystem, groundIntake, sparkMax));
-        //joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
-        //joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem, sparkMax));
         joystick.pov(90).whileTrue(new StrafeCommand(drivetrain, joystick));
         joystick.pov(270).whileTrue(new StrafeCommand(drivetrain, joystick));
         joystick.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));
-        //check for algae removal upper and downer
+        joystick.back().onTrue(new KillCommand(armSubsystem, groundIntake, sparkMax));
+        //joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
+        //joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem, sparkMax));
 
         joystick2.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
-        joystick2.leftBumper().onTrue(new GroundAlgaeCommand(groundIntake));
+        joystick2.leftBumper().onTrue(new GroundAlgaeCommand(groundIntake, armSubsystem));
         joystick2.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
         joystick2.y().onTrue(new AlgaeUpRemovalCommand(armSubsystem));
         joystick2.x().onTrue(new AlgaeDownRemoveCommand(armSubsystem));

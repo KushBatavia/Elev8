@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 
@@ -19,8 +20,6 @@ public class GroundOuttakeCommand extends Command {
   private double SET_POWER_Temp;
   private double prevT;
   private double lastT;
-  private double basePos;
-  private double currentThreshold;
   private boolean returnFlag;
   public GroundOuttakeCommand(GroundIntakeSubsystem m_ground, ArmSubsystem m_arm) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -31,34 +30,37 @@ public class GroundOuttakeCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    returnFlag = false;    
+    Constants.killFlag = false;
+    if(m_ground.getHoodPos()<220 && GroundIntakeSubsystem.intakeState == -1) {
+       state = 1; 
+       prevT = 0; 
+       lastT = 0;
+       returnFlag = false;
+       Constants.killFlag = false; 
+
+    }else{
+      Constants.killFlag = true; 
+      returnFlag = true;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(GroundIntakeSubsystem.intakeState == -1){
-      m_ground.setPos(SET_ANGLE_Temp);
-      state = 1;
-    }else{
-      returnFlag = true;
-    }
     prevT = Timer.getFPGATimestamp();
-    if(state ==1 && m_ground.getPos() > SET_ANGLE_Temp) {
-      if (m_ground.getBeamBreaker1()) { 
+    if(state == 1) {
+      if (GroundIntakeSubsystem.coralState) { 
         //Coral
-        m_ground.setIntakeMotor(SET_POWER_Temp);
-        m_ground.setPos(SET_ANGLE_Temp);
-      } else if (!m_ground.getBeamBreaker1()) { 
+        m_ground.setIntakeMotor(-0.19);
+        m_ground.setPos(263);
+      } else if (!GroundIntakeSubsystem.coralState) { 
         //Algae
-        m_ground.setIntakeMotor(SET_POWER_Temp);
-        m_ground.setPos(SET_ANGLE_Temp);
-
+        m_ground.setIntakeMotor(0.8);
       }
       state = 2;
       lastT = Timer.getFPGATimestamp();
     }
-    if(state ==2 && Math.abs(lastT - prevT) > 0.5){
+    if(state == 2 && Math.abs(lastT - prevT) > 0.5){
       m_ground.setIntakeMotor(0);
       GroundIntakeSubsystem.intakeState = GroundIntakeSubsystem.intakeState*-1;
       returnFlag = true;
@@ -72,6 +74,6 @@ public class GroundOuttakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnFlag;
+    return returnFlag||Constants.killFlag;
   }
 }

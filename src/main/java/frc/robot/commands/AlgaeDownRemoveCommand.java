@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 
@@ -22,8 +23,9 @@ public class AlgaeDownRemoveCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_arm.setMiddlePos(SET_ANGLE_Temp);
-    m_arm.setRightBasePos(SET_ANGLE_Temp);
+    Constants.killFlag = false;
+    m_arm.setMiddlePos(362);
+    m_arm.setRightBasePos(196);
     ArmSubsystem.algaeFlag = true;    
     ArmSubsystem.armState = 3;
   }

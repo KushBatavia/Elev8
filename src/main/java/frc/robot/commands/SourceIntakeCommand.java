@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 import frc.robot.subsystems.SparkMaxSubsystem;
@@ -33,6 +34,7 @@ public class SourceIntakeCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Constants.killFlag = false;
     returnFlag = false;
     ArmSubsystem.algaeFlag = false;
     if(m_groundIntake.getPos()>255 || m_groundIntake.getPos()<200) {
@@ -46,34 +48,32 @@ public class SourceIntakeCommand extends Command {
   @Override
   public void execute() {
     if(state == 1){
-      m_arm.setRightBasePos(SET_ANGLE_Temp);
+      m_arm.setRightBasePos(225);
       state =2;
     }
-    if(state ==2 && m_arm.getRightBasePos()<SET_ANGLE_Temp){
-      m_groundIntake.setPos(SET_ANGLE_Temp);
+    if(state ==2 && m_arm.getRightBasePos() < 230){
+      m_groundIntake.setPos(262);
       state = 3;
     }
 
-    if(state == 3 && m_groundIntake.getPos()<SET_ANGLE_Temp){
-      m_arm.setMiddlePos(SET_ANGLE_Temp);
-      m_arm.setRightBasePos(SET_ANGLE_Temp);
+    if(state == 3 && m_groundIntake.getPos() > 257 && state==4){
+      m_arm.setMiddlePos(385);
+      m_arm.setRightBasePos(253);
+      m_spark.setArmIntakeMotor(-0.6);
       ArmSubsystem.armState = 5;
       state = 5;
     }
-    if(m_arm.getMiddlePos()<SET_ANGLE_Temp  &&  m_arm.getRightBasePos()<SET_ANGLE_Temp && state == 5) {
-      m_spark.setArmIntakeMotor(SET_POWER_Temp);
+    if(state == 5 && m_arm.getBeamIntake()) {
+      m_arm.setMiddlePos(348);
+      m_spark.setArmIntakeMotor(-0.15);
       state = 6;
-    }
-    if(state == 6 && m_arm.getBeamIntake()&&m_arm.getBeamOuttake()) {
-      m_spark.setArmIntakeMotor(0);
+    if(state == 6 && m_arm.getBeamIntake() && m_arm.getBeamOuttake()){
+      m_spark.setArmIntakeMotor(0.1);
       state = 7;
-    if(state == 7){
-      m_spark.setArmIntakeMotor(SET_POWER_Temp);
-      state = 8;
     } 
-    if(state ==8 && !m_arm.getBeamIntake() && m_arm.getBeamOuttake()){
+    if(state ==7 && m_arm.getBeamIntake() && !m_arm.getBeamOuttake()){
       m_spark.setArmIntakeMotor(0);
-      state = 9;
+      state = 8;
       returnFlag = true;
     }
       
@@ -88,6 +88,6 @@ public class SourceIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnFlag;
+    return returnFlag||Constants.killFlag;
   }
 }

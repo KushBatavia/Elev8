@@ -28,6 +28,7 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   private final double DOWNER_LIMIT = 0;
 
   public static double intakeState = 1;
+  public static boolean coralState = false;
 
   
   /** Creates a new IntakeSubsystem. */

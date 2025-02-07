@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -32,6 +33,7 @@ public class StrafeCommand extends Command {
   @Override
   public void initialize() {
     returnFlag = false;
+    Constants.killFlag = false;
   }
 
   public void execute() {
@@ -43,9 +45,9 @@ public class StrafeCommand extends Command {
     }));
     
     if (leftDPad) {
-        drivetrain.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0));
+        drivetrain.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.1));
     } else if (rightDPad) {
-        drivetrain.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0));
+        drivetrain.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0.1));
     } else if(!leftDPad && !rightDPad) {
         returnFlag = true;
     }
@@ -58,6 +60,6 @@ public class StrafeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnFlag;
+    return returnFlag||Constants.killFlag;
   }
 }

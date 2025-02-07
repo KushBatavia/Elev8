@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 
@@ -26,36 +27,31 @@ public class GroundCoralCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Constants.killFlag = false;
     returnFlag = false;
-    if(m_ground.intakeState == 1){
-      state = 0.1;
-    }else{
-      returnFlag = true;
-    }
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(state == 0.1){
-      if(m_arm.getMiddleCANPos() < SET_ANGLE_Temp || m_arm.getRightBaseCANPos() < SET_ANGLE_Temp) {
-        m_arm.setMiddlePos(SET_ANGLE_Temp);  
-        m_arm.setRightBasePos(SET_ANGLE_Temp);
+    if(GroundIntakeSubsystem.intakeState == 1){
+      if(m_arm.getMiddleCANPos() > 350 || m_arm.getRightBaseCANPos() > 230) {
+        m_arm.setMiddlePos(345);  
+        m_arm.setRightBasePos(225);
       }
-        state = 0.5;  
+        state = 2;  
+    }else{
+      returnFlag = true;
     }
-    if(state == 0.5){
-      m_ground.setPos(SET_ANGLE_Temp);
-      state = 1;
+    if(state == 2){
+      m_ground.setPos(95);
+      m_ground.setIntakeMotor(0.3);
+      state = 3;
     }
-    if(state ==1 && m_ground.getPos() > SET_ANGLE_Temp) {
-      m_ground.setIntakeMotor(SET_POWER_Temp);
-      state = 2;
-    }
-    if(state ==2 && m_ground.getBeamBreaker1()){
+    if(state ==3 && m_ground.getCurrent()>20){
       m_ground.setIntakeMotor(0);
-      m_ground.intakeState = m_ground.intakeState*-1;
+      m_ground.setPos(203);
+      GroundIntakeSubsystem.intakeState = GroundIntakeSubsystem.intakeState*-1;
       returnFlag = true;
     }
   }
@@ -67,6 +63,6 @@ public class GroundCoralCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnFlag;
+    return returnFlag||Constants.killFlag;
   }
 }

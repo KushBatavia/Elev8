@@ -4,29 +4,39 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.GroundIntakeSubsystem;
+import frc.robot.subsystems.SparkMaxSubsystem;
+
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AlgaeUpRemovalCommand extends Command {
-  private ArmSubsystem m_arm = new ArmSubsystem();
-  private double SET_ANGLE_Temp;
-  private boolean returnFlag;
-  /** Creates a new AlgaeUpRemovalCommand. */
-  public AlgaeUpRemovalCommand(ArmSubsystem m_arm) {
+public class KillCommand extends Command {
+  private ArmSubsystem m_arm;
+  private GroundIntakeSubsystem m_ground;
+  private SparkMaxSubsystem m_spark;
+  private RobotContainer container;
+  /** Creates a new KillCommand. */
+  public KillCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
+    this.m_ground = m_ground;
+    this.m_spark = m_spark;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Constants.killFlag = false;
-    m_arm.setMiddlePos(210);
-    m_arm.setRightBasePos(210);
-    ArmSubsystem.algaeFlag = true;    
-    ArmSubsystem.armState = 3;
-    
+    Constants.killFlag = true;
+    m_spark.setArmIntakeMotor(0);
+    m_arm.setHangarMotorPower(0);
+    m_arm.middleMotor.set(0);
+    m_arm.rightBaseMotor.set(0);
+    m_ground.setIntakeMotor(0);
+    m_ground.hoodIntakeMotor.set(0);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,6 +50,6 @@ public class AlgaeUpRemovalCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnFlag||Constants.killFlag;
+    return false;
   }
 }

@@ -17,6 +17,7 @@ public final class Constants {
   public static final double arm_base_gear_ratio = 80.0;
   public static final double arm_middle_gear_ratio = 39.4736842105;
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+  public static final int kDriverControllerPort = 0;
   }
+  public static boolean killFlag = false;
 }

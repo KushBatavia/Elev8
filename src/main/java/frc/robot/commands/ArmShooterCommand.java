@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SparkMaxSubsystem;
 
@@ -29,6 +30,7 @@ public class ArmShooterCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Constants.killFlag = false;
     ArmSubsystem.algaeFlag = false;
     returnFlag = false;
   }
@@ -38,7 +40,7 @@ public class ArmShooterCommand extends Command {
   public void execute() {
     prevT = Timer.getFPGATimestamp();
     if(ArmSubsystem.shootFlag && state == 0){
-      m_spark.setArmIntakeMotor(SET_POWER_Temp);
+      m_spark.setArmIntakeMotor(-0.40);
       lastT = Timer.getFPGATimestamp();
       state = 1;
     }
@@ -47,8 +49,8 @@ public class ArmShooterCommand extends Command {
       state = 2; 
     }
     if(state == 2){
-      m_arm.setMiddlePos(SET_ANGLE_Temp);
-      m_arm.setRightBasePos(SET_ANGLE_Temp);
+      m_arm.setMiddlePos(255);
+      m_arm.setRightBasePos(345);
       returnFlag = true;
     }
 
@@ -61,6 +63,6 @@ public class ArmShooterCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return returnFlag;
+    return returnFlag || Constants.killFlag;
   }
 }
