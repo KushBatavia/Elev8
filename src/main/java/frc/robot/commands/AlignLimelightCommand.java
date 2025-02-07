@@ -36,14 +36,13 @@ public class AlignLimelightCommand extends Command {
     @Override
     public void execute() {
         if (!alignTheta) { robotYaw = 0; targetYaw = 0;}
-        else { targetYaw = LimelightHelpers.getBotPose2d_wpiBlue("limelight-new").getRotation().getDegrees();
-        robotYaw = pigeon.getYaw().getValueAsDouble(); /*not sure about this one */}
+        else { targetYaw = LimelightHelpers.getBotPose2d_wpiBlue("limelight-new").getRotation().getDegrees(); }
         if (!alignX) { tx = 0;} 
         else { tx = LimelightHelpers.getTX("limelight-new");}
         if (!alignY) { ty = 0;} 
         else {ty = LimelightHelpers.getTY("limelight-new");}
 
-        double thetaError = targetYaw - robotYaw;
+        double thetaError = targetYaw;
         double speedX = xController.calculate(tx, offsetX);
         double speedY = yController.calculate(ty, 0);
         double speedTheta = thetaController.calculate(thetaError, 0);
