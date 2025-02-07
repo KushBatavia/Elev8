@@ -16,6 +16,7 @@ public class AlignLimelightCommand extends Command {
     private final PIDController yController = new PIDController(0.1, 0, 0);
     private final PIDController thetaController = new PIDController(0.05, 0, 0); //Tune all of these later
     private final Pigeon2 pigeon = new Pigeon2(0); //Double check CAN Ids later
+    private double offsetX;
 
 
     @Override
@@ -23,11 +24,12 @@ public class AlignLimelightCommand extends Command {
         returnFlag = false;
     }
 
-    public AlignLimelightCommand(CommandSwerveDrivetrain drivetrain, boolean alignX, boolean alignY, boolean alignTheta) {
+    public AlignLimelightCommand(CommandSwerveDrivetrain drivetrain, boolean alignX, boolean alignY, boolean alignTheta, double offsetX) {
         this.drivetrain = drivetrain;
         this.alignX = alignX;
         this.alignY = alignY;
         this.alignTheta = alignTheta;
+        this.offsetX = offsetX;
         addRequirements(drivetrain);
     }
 
@@ -42,7 +44,7 @@ public class AlignLimelightCommand extends Command {
         else {ty = LimelightHelpers.getTY("limelight-new");}
 
         double thetaError = targetYaw - robotYaw;
-        double speedX = xController.calculate(tx, 0);
+        double speedX = xController.calculate(tx, offsetX);
         double speedY = yController.calculate(ty, 0);
         double speedTheta = thetaController.calculate(thetaError, 0);
 

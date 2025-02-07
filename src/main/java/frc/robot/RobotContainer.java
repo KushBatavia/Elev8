@@ -121,8 +121,8 @@ public class RobotContainer {
         joystick.pov(90).whileTrue(new StrafeCommand(drivetrain, joystick));
         joystick.pov(270).whileTrue(new StrafeCommand(drivetrain, joystick));
         joystick.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));
-        joystick.leftTrigger().onTrue(new AlignLimelightCommand(drivetrain, -5 /*TUNE LATER */, 0, 0));
-        joystick.rightTrigger().onTrue(new AlignLimelightCommand(drivetrain, 5 /*TUNE LATER */, 0, 0));
+        joystick.leftTrigger().onTrue(new AlignLimelightCommand(drivetrain, true, false, true, 5 /*TUNE LATER */));
+        joystick.rightTrigger().onTrue(new AlignLimelightCommand(drivetrain, true, false, true, 5 /*TUNE LATER */));
         //check for algae removal upper and downer
 
         joystick2.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
