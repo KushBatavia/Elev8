@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -9,50 +9,57 @@ import frc.robot.LimelightHelpers;
 
 public class AlignLimelightCommand extends Command {
     private final CommandSwerveDrivetrain drivetrain;
-    private final double targetX, targetY, targetTheta; 
+    private boolean alignX, alignY, alignTheta;
+    private double tx, ty, targetYaw, robotYaw;
+    private boolean returnFlag = false;
     private final PIDController xController = new PIDController(0.1, 0, 0);
     private final PIDController yController = new PIDController(0.1, 0, 0);
-    private final PIDController thetaController = new PIDController(0.05, 0, 0);
+    private final PIDController thetaController = new PIDController(0.05, 0, 0); //Tune all of these later
+    private final Pigeon2 pigeon = new Pigeon2(0); //Double check CAN Ids later
 
-    public AlignLimelightCommand(CommandSwerveDrivetrain drivetrain, double targetX, double targetY, double targetTheta) {
+
+    @Override
+    public void initialize() {
+        returnFlag = false;
+    }
+
+    public AlignLimelightCommand(CommandSwerveDrivetrain drivetrain, boolean alignX, boolean alignY, boolean alignTheta) {
         this.drivetrain = drivetrain;
-        this.targetX = targetX;
-        this.targetY = targetY;
-        this.targetTheta = targetTheta;
+        this.alignX = alignX;
+        this.alignY = alignY;
+        this.alignTheta = alignTheta;
         addRequirements(drivetrain);
     }
 
     @Override
     public void execute() {
-        double[] targetPose = LimelightHelpers.getTargetPose_RobotSpace("limelight");
-        
-        if (targetPose.length < 6) {
-            drivetrain.setControl(new SwerveRequest.RobotCentric()
-                .withVelocityX(0)
-                .withVelocityY(0)
-                .withRotationalRate(0));
-            return;
-        }
+        if (!alignTheta) { robotYaw = 0; targetYaw = 0;}
+        else { targetYaw = LimelightHelpers.getBotPose2d_wpiBlue("limelight-new").getRotation().getDegrees();
+        robotYaw = pigeon.getYaw().getValueAsDouble(); /*not sure about this one */}
+        if (!alignX) { tx = 0;} 
+        else { tx = LimelightHelpers.getTX("limelight-new");}
+        if (!alignY) { ty = 0;} 
+        else {ty = LimelightHelpers.getTY("limelight-new");}
 
-        double currentX = targetPose[0]; // Forward/backward
-        double currentY = targetPose[1]; // Left/right
-        double currentTheta = targetPose[5]; // Rotation (Yaw)
-
-        double speedX = xController.calculate(currentX, targetX);
-        double speedY = yController.calculate(currentY, targetY);
-        double speedTheta = thetaController.calculate(currentTheta, targetTheta);
+        double thetaError = targetYaw - robotYaw;
+        double speedX = xController.calculate(tx, 0);
+        double speedY = yController.calculate(ty, 0);
+        double speedTheta = thetaController.calculate(thetaError, 0);
 
         drivetrain.setControl(new SwerveRequest.RobotCentric()
-            .withVelocityX(speedX)
-            .withVelocityY(speedY)
+            .withVelocityX(speedX) // Forward/Backward
+            .withVelocityY(-speedY) // Left/Right
             .withRotationalRate(speedTheta) // Align rotation
         );
+
+        if (Math.abs(xController.getPositionError()) < 0.1 && Math.abs(yController.getPositionError()) < 0.1 &&  Math.abs(thetaController.getPositionError()) < 2.0)
+        {
+            returnFlag = true;
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(xController.getPositionError()) < 0.1 &&
-               Math.abs(yController.getPositionError()) < 0.1 &&
-               Math.abs(thetaController.getPositionError()) < 2.0; // Rotation within 2 degrees
+        return returnFlag;
     }
 }

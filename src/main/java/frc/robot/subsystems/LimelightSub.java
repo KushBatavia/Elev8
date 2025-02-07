@@ -25,7 +25,7 @@ public class LimelightSub extends SubsystemBase {
     if (!LimelightHelpers.getTV("limelight-new")) return; // Check if target is visible
     Pose2d visionPose = LimelightHelpers.getBotPose2d_wpiBlue("limelight-new");
     double timestamp = Timer.getFPGATimestamp() - LimelightHelpers.getLatency_Capture("limelight-new") / 1000.0;
-    m_swerve.addVisionMeasurement(visionPose, timestamp);
+    m_swerve.addVisionMeasurement(visionPose, timestamp, visionStdDevs);
   }
 
   @Override

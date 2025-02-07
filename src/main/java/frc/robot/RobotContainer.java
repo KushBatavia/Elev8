@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlgaeDownRemoveCommand;
 import frc.robot.commands.AlgaeUpRemovalCommand;
+import frc.robot.commands.AlignLimelightCommand;
 import frc.robot.commands.ArmShooterCommand;
 import frc.robot.commands.GroundAlgaeCommand;
 import frc.robot.commands.GroundCoralCommand;
@@ -120,6 +121,8 @@ public class RobotContainer {
         joystick.pov(90).whileTrue(new StrafeCommand(drivetrain, joystick));
         joystick.pov(270).whileTrue(new StrafeCommand(drivetrain, joystick));
         joystick.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));
+        joystick.leftTrigger().onTrue(new AlignLimelightCommand(drivetrain, -5 /*TUNE LATER */, 0, 0));
+        joystick.rightTrigger().onTrue(new AlignLimelightCommand(drivetrain, 5 /*TUNE LATER */, 0, 0));
         //check for algae removal upper and downer
 
         joystick2.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
