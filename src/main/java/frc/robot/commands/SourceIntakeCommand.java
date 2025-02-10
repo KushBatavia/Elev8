@@ -37,7 +37,7 @@ public class SourceIntakeCommand extends Command {
     Constants.killFlag = false;
     returnFlag = false;
     ArmSubsystem.algaeFlag = false;
-    if(m_groundIntake.getPos()>255 || m_groundIntake.getPos()<200) {
+    if(m_groundIntake.getPos()>255 /*change later*/ || m_groundIntake.getPos()<200) {
       state = 4;
     }else{
       state = 1;
@@ -53,10 +53,10 @@ public class SourceIntakeCommand extends Command {
     }
     if(state ==2 && m_arm.getRightBasePos() < 230){
       m_groundIntake.setPos(262);
-      state = 3;
+      state = 4;
     }
 
-    if(state == 3 && m_groundIntake.getPos() > 257 && state==4){
+    if(m_groundIntake.getPos() > 257 && state==4){
       m_arm.setMiddlePos(385);
       m_arm.setRightBasePos(253);
       m_spark.setArmIntakeMotor(-0.6);

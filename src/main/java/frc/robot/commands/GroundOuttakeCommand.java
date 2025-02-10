@@ -55,7 +55,7 @@ public class GroundOuttakeCommand extends Command {
         m_ground.setPos(263);
       } else if (!GroundIntakeSubsystem.coralState) { 
         //Algae
-        m_ground.setIntakeMotor(0.8);
+        m_ground.setIntakeMotor(-0.8);
       }
       state = 2;
       lastT = Timer.getFPGATimestamp();
