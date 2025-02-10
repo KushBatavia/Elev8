@@ -59,7 +59,7 @@ public class GroundAlgaeCommand extends Command {
       lastT = Timer.getFPGATimestamp();
       state = 2;
     }
-    if(state ==2 && m_ground.getCurrent()>currentThreshold && Math.abs(prevT - lastT) > 0.5) {
+    if(state == 2 && m_ground.getCurrent() > currentThreshold && Math.abs(prevT - lastT) > 0.5) {
       m_ground.setIntakeMotor(0);
       m_ground.intakeState = m_ground.intakeState*-1;
       returnFlag = true;

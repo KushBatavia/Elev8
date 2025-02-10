@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.6126771054025424,
+        "y": 5.649494339247881
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.278793452325959,
+        "y": 5.773819344268858
+      },
+      "isLocked": false,
+      "linkedName": "hex_opp2"
+    },
+    {
+      "anchor": {
+        "x": 1.705685166181144,
+        "y": 7.113446769067796
+      },
+      "prevControl": {
+        "x": 1.986488568641488,
+        "y": 6.997794586036424
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "upar ka intake"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.5,
+    "maxAcceleration": 5.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -49.466907202952434
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -61.18803197549209
+  },
+  "useDefaultConstraints": false
+}
