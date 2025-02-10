@@ -10,7 +10,6 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -41,7 +40,7 @@ import frc.robot.subsystems.SparkMaxSubsystem;
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.1; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-    private final SendableChooser<Command> autoChooser;
+    private SendableChooser<Command> autoChooser;
 
 
     public ArmSubsystem armSubsystem = new ArmSubsystem();
@@ -63,6 +62,7 @@ public class RobotContainer {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    private final AutoBuilder autoBuilder = new AutoBuilder();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -77,17 +77,16 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
-
-        autoChooser = AutoBuilder.buildAutoChooser("4L3.auto");
-
-        // NamedCommands.registerCommand("autoBalance"));
-        // NamedCommands.registerCommand("exampleCommand"));
-        // NamedCommands.registerCommand("someOtherCommand", new SomeOtherCommand());
-
-        // Another option that allows you to specify the default auto by its name
-        // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
-        // CHECKING AUTO CHOOSER
         SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        if (armSubsystem.getMiddleCANPos() == armSubsystem.getMiddlePos() && armSubsystem.getRightBaseCANPos() == armSubsystem.getRightBasePos())
+        {
+            autoChooser = autoBuilder.buildAutoChooser("4L3.auto");
+
+            // NamedCommands.registerCommand("autoBalance"));
+            // NamedCommands.registerCommand("exampleCommand"));
+            // NamedCommands.registerCommand("someOtherCommand", new SomeOtherCommand());
+        }
     }
     private void configureBindings() {
 
