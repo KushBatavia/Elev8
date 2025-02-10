@@ -47,6 +47,7 @@ public class GroundCoralCommand extends Command {
       m_ground.setPos(95);
       m_ground.setIntakeMotor(0.3);
       state = 3;
+      GroundIntakeSubsystem.coralState = true; 
     }
     if(state ==3 && m_ground.getCurrent()>20){
       m_ground.setIntakeMotor(0);

@@ -14,7 +14,7 @@ public class HangPositionCommand extends Command {
   /** Creates a new HangPositionCommand. */
   private ArmSubsystem m_arm = new ArmSubsystem();
   private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem();
-  private double state = 0;
+  private double state;
   private double armMiddlePos;
   private double armBasePos;
   private double SET_ANGLE_Temp;
@@ -39,7 +39,7 @@ public class HangPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_arm.getRightBasePos() < 230 state == 0){
+    if(m_arm.getRightBasePos() < 230 && state == 0){
     // SET ARM INTAKE MOTOR FOR SMTH IDK
       //Figure out which motors are being used
       state = 1;

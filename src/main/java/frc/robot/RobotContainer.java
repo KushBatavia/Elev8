@@ -45,15 +45,6 @@ public class RobotContainer {
     public ArmSubsystem armSubsystem = new ArmSubsystem();
     public GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
     public SparkMaxSubsystem sparkMax = new SparkMaxSubsystem();
-    // public ArmIntakeCommand armCommand = new ArmIntakeCommand(armSubsystem);
-    // public GroundCoralCommand groundCoralCommand = new GroundCoralCommand(groundIntake);
-    // public GroundAlgaeCommand groundAlgaeCommand = new GroundAlgaeCommand(groundIntake);
-    // public GroundOuttakeCommand groundOuttakeCommand = new GroundOuttakeCommand(groundIntake);
-    // public L2Command l2Command = new L2Command(armSubsystem);
-    // public ArmIntakeCommand armIntakeCommand = new ArmIntakeCommand(armSubsystem);
-    // public ArmOuttakeCommand armOuttakeCommand = new ArmOuttakeCommand(armSubsystem);
-    // public AlgaeRemovalUpperCommand algaeRemovalUpperCommand = new AlgaeRemovalUpperCommand(armSubsystem);
-    // public AlgaeRemovalDownerCommand algaeRemovalDownerCommand = new AlgaeRemovalDownerCommand(armSubsystem);
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -69,9 +60,9 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    // private SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
-    //         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate*0.1)
-    //         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    private SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate*0.1)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     public RobotContainer() {
         configureBindings();
@@ -91,10 +82,10 @@ public class RobotContainer {
             );
         }
 
-        // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // joystick.b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
-        // ));
+        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        joystick.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+        ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -109,10 +100,10 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         // Testing
-        joystick.a().onTrue(new InstantCommand(() -> {
-            // armSubsystem.setMiddlePos(95);
-            // armSubsystem.setRightBasePos(230);
-        }));
+        // joystick.a().onTrue(new InstantCommand(() -> {
+        //     armSubsystem.setMiddlePos(95);
+        //     armSubsystem.setRightBasePos(230);
+        // }));
         
         joystick.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
         joystick.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
@@ -125,8 +116,8 @@ public class RobotContainer {
         joystick.pov(270).whileTrue(new StrafeCommand(drivetrain, joystick));
         joystick.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));
         joystick.back().onTrue(new KillCommand(armSubsystem, groundIntake, sparkMax));
-        //joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
-        //joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem, sparkMax));
+        joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
+        joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem, sparkMax));
 
         joystick2.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
         joystick2.leftBumper().onTrue(new GroundAlgaeCommand(groundIntake, armSubsystem));
