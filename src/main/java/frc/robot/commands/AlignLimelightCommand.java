@@ -10,14 +10,18 @@ import frc.robot.LimelightHelpers;
 public class AlignLimelightCommand extends Command {
     private final CommandSwerveDrivetrain drivetrain;
     private boolean alignX;
+    public boolean alignY;
     private double tx;
+    private double ty;
     private boolean returnFlag = false;
     private final PIDController xController = new PIDController(0.1, 0, 0);
+    private final PIDController yController = new PIDController(0.1, 0, 0);
 
 
     @Override
     public void initialize() {
         alignX = true;
+        alignY = true;
         returnFlag = false;
     }
 
@@ -27,18 +31,19 @@ public class AlignLimelightCommand extends Command {
 
     @Override
     public void execute() {
-        if (!alignX) { tx = 0;} 
-        else { tx = LimelightHelpers.getTX("limelight-new");}
+        if (!alignX && !alignY) { tx = 0; ty = 0; } 
+        else { tx = LimelightHelpers.getTX("limelight-new"); ty = LimelightHelpers.getTY("limelight-new");}
 
-        double speedX = xController.calculate(tx, 0);
+        double speedX = xController.calculate(tx, -10);
+        double speedY = yController.calculate(ty, 0);
 
         drivetrain.setControl(new SwerveRequest.RobotCentric()
-            .withVelocityX(speedX) // Forward/Backward
+            .withVelocityX(speedX).withVelocityY(speedY) // Forward/Backward
         );
 
-        if (Math.abs(xController.getPositionError()) < 2 /*degrees */)
-        {
+        if (Math.abs(xController.getPositionError()) < 2) /*degrees */ {
             alignX = false;
+            alignY = false; 
             returnFlag = true;
         }
     }
