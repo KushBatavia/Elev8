@@ -44,7 +44,7 @@ public class L3Command extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(ArmSubsystem.armState == 1){
+    if(ArmSubsystem.armState == 1||ArmSubsystem.armState == 3){
       m_arm.setRightBasePos(217);
       state =1;
       if(state == 1 && Math.abs(m_arm.getMiddleCANPos() - 217)<3){

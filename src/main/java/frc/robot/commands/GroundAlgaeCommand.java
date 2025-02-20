@@ -32,13 +32,16 @@ public class GroundAlgaeCommand extends Command {
   public void initialize() {
     returnFlag = false;
     Constants.killFlag = false;
+    state = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    lastT = Timer.getFPGATimestamp();
     if(GroundIntakeSubsystem.intakeState == 1){
-      if(m_arm.getMiddleCANPos() > 350 || m_arm.getRightBaseCANPos() > 230) {
+      if(m_arm.getMiddlePos() > 350 || m_arm.getRightBaseCANPos() > 230) {
         m_arm.setMiddlePos(345);  
         m_arm.setRightBasePos(225);
       }
@@ -54,11 +57,11 @@ public class GroundAlgaeCommand extends Command {
       state = 2;
       GroundIntakeSubsystem.coralState = false; 
     }
-    lastT = Timer.getFPGATimestamp();
     if(state ==2 && m_ground.getCurrent()>currentThreshold && Math.abs(prevT - lastT) > 0.2) {
       m_ground.setPos(190);
-      m_ground.setIntakeMotor(0);
+      m_ground.setIntakeMotor(0);//Add a bit of velocity
       GroundIntakeSubsystem.intakeState = GroundIntakeSubsystem.intakeState*-1;
+      state = 3;
       returnFlag = true;
     }
   }

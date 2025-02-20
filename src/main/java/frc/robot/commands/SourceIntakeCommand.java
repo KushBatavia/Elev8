@@ -35,26 +35,18 @@ public class SourceIntakeCommand extends Command {
   @Override
   public void initialize() {
     Constants.killFlag = false;
+    // state = 0;
     returnFlag = false;
     ArmSubsystem.algaeFlag = false;
-    if(m_groundIntake.getPos()>255 /*change later*/ || m_groundIntake.getPos()<200) {
+    if(m_groundIntake.getPos()>287 /*change later*/) {
+      m_groundIntake.setPos(262);
       state = 4;
-    }else{
-      state = 1;
     }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(state == 1){
-      m_arm.setRightBasePos(225);
-      state =2;
-    }
-    if(state ==2 && m_arm.getRightBasePos() < 230){
-      m_groundIntake.setPos(262);
-      state = 4;
-    }
 
     if(m_groundIntake.getPos() > 257 && state==4){
       m_arm.setMiddlePos(385);

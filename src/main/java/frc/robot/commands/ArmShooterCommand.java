@@ -33,6 +33,7 @@ public class ArmShooterCommand extends Command {
     Constants.killFlag = false;
     ArmSubsystem.algaeFlag = false;
     returnFlag = false;
+    state = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

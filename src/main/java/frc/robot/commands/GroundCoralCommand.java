@@ -29,6 +29,7 @@ public class GroundCoralCommand extends Command {
   public void initialize() {
     Constants.killFlag = false;
     returnFlag = false;
+    state = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

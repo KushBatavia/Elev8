@@ -25,7 +25,6 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   public CANcoder canCoder = new CANcoder(10, "rio"); 
   public MotionMagicDutyCycle mMotionMagicDutyCycle;
   public VelocityDutyCycle mVelocityDutyCycle;
-
   //SET VALUES LATER WHEN VARSHIL SIR GIVES
   private final double UPPER_LIMIT = 0;
   private final double DOWNER_LIMIT = 0;

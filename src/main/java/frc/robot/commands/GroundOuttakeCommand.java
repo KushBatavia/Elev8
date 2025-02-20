@@ -31,6 +31,7 @@ public class GroundOuttakeCommand extends Command {
   @Override
   public void initialize() {
     Constants.killFlag = false;
+    state = 0;
     if(m_ground.getHoodPos()<220 && GroundIntakeSubsystem.intakeState == -1) {
        state = 1; 
        prevT = 0; 

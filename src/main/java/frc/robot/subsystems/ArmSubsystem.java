@@ -68,11 +68,16 @@ public class ArmSubsystem extends SubsystemBase {
     //4 = Algae Up
     //5 = Source Intake
     //6 = Hang
+
+
+/*
+  public static enum armStateEnum(int type){
+    CLOSE, L2, L3, ALGAE_UP, ALGAEU_DOWN, SOURCE_INTAKE, HANG
+  }
+*/ 
   /** Creates a new ArmSubsystem. */
   // @SuppressWarnings("removal")
   public ArmSubsystem() {
-
-    
 
     // Right Base Motor Config
     rightBaseMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -115,8 +120,8 @@ public class ArmSubsystem extends SubsystemBase {
     middleMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
     middleMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
 
-    middleMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(1200);
-    middleMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(1200);
+    middleMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(80);
+    middleMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(150);
 
     mMotionMagicDutyCycleMiddle = new MotionMagicDutyCycle(0);
     // PositionDutyCycle middleMotorPositionDutyCycle = new PositionDutyCycle(0);
@@ -139,8 +144,8 @@ public class ArmSubsystem extends SubsystemBase {
     hangarMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
     hangarMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
 
-    hangarMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(80);
-    hangarMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(150);
+    hangarMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(80/3);
+    hangarMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(150/3);
 
     hangarMotor.getConfigurator().apply(hangarMotorTalonConfigs, 0.050);
 
@@ -204,7 +209,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void setMiddlePos(double angle) {
     angle = Math.max(angle, MIDDLE_UPPER_LIMIT);
     angle = Math.min(angle, MIDDLE_DOWNER_LIMIT);
-    middleMotor.setControl(mMotionMagicDutyCycleMiddle.withPosition((angle * Constants.arm_middle_gear_ratio) / 360).withSlot(0));
+    middleMotor.setControl(mMotionMagicDutyCycleMiddle.withPosition(((angle) * Constants.arm_middle_gear_ratio) / 360).withSlot(0));
   }
 
   public double getMiddlePos() {

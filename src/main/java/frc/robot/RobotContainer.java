@@ -30,7 +30,6 @@ import frc.robot.commands.KillCommand;
 import frc.robot.commands.L2Command;
 import frc.robot.commands.L3Command;
 import frc.robot.commands.SourceIntakeCommand;
-import frc.robot.commands.StrafeCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -112,8 +111,6 @@ public class RobotContainer {
         joystick.x().onTrue(new GroundOuttakeCommand(groundIntake, armSubsystem));
         joystick.b().onTrue(new L2Command(armSubsystem, groundIntake, sparkMax));
         joystick.y().onTrue(new L3Command(armSubsystem, groundIntake, sparkMax));
-        joystick.pov(90).whileTrue(new StrafeCommand(drivetrain, joystick));
-        joystick.pov(270).whileTrue(new StrafeCommand(drivetrain, joystick));
         joystick.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));
         joystick.back().onTrue(new KillCommand(armSubsystem, groundIntake, sparkMax));
         joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));

@@ -43,8 +43,8 @@ public class L2Command extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    if(ArmSubsystem.armState == 2){ //If already at L3, run this logic
+  public void execute(){
+    if(ArmSubsystem.armState == 2 || ArmSubsystem.armState == 4){ //If already at L3, run this logic
       m_arm.setRightBasePos(225);
       state = 1;
       if(state == 1 && Math.abs(m_arm.getRightBasePos() - 225)<3){
