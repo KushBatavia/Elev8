@@ -4,48 +4,50 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.GroundIntakeSubsystem;
+import frc.robot.subsystems.GrabberSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class HangPositionCommand extends Command {
-  /** Creates a new HangPositionCommand. */
-  private ArmSubsystem m_arm = new ArmSubsystem();
-  private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem();
-  private double state = 0;
-  private double armMiddlePos;
-  private double armBasePos;
-  private double SET_ANGLE_Temp;
-  private double SET_POWER_Temp;
-  private boolean returnFlag;
-  public HangPositionCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
+public class Grab extends Command {
+  private static double waitTime = 1.5;
+  private static double initTime;
+  private static double currentTime;
+  private static int state = 0;
+  private boolean returnFlag = false;
+  /** Creates a new Grab. */
+  public Grab() {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_arm = m_arm;
-    this.m_ground = m_ground;
   }
-
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     returnFlag = false;
-    if(m_ground.getPos()>255 || m_ground.getPos()<200) {
-      state = 0.5;
-    }else{
-      returnFlag = true;
-    }
-    
+    state=0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(state == 0.5){
-      //Figure out which motors are being used
-      state = 1;
+    currentTime = Timer.getFPGATimestamp();
+    if (state == 0)
+    {
+      GrabberSubsystem.RunGrabber(0.3);
+      initTime = Timer.getFPGATimestamp();
+      state=1;
     }
-    if(state == 1){
-      returnFlag = true;
+    if (state==1)
+    {
+      if (Math.abs(currentTime - initTime)>=waitTime | GrabberSubsystem.GetBeam())
+      {
+        state = 2;
+      }
+    }    
+    if (state==2)
+    {
+      GrabberSubsystem.RunGrabber(0);
+      returnFlag=true;
     }
   }
 
