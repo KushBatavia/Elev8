@@ -69,14 +69,14 @@ public class ArmSubsystem extends SubsystemBase {
     //5 = Source Intake
     //6 = Hang
   /** Creates a new ArmSubsystem. */
-  @SuppressWarnings("removal")
+  // @SuppressWarnings("removal")
   public ArmSubsystem() {
 
-    leftBaseMotor.setControl(new Follower(rightBaseMotor.getDeviceID(), true));
+    
 
     // Right Base Motor Config
     rightBaseMotor.getConfigurator().apply(new TalonFXConfiguration());
-    rightBaseMotor.setInverted(false);
+    // rightBaseMotor.setInverted(false);
 
     TalonFXConfiguration rightBaseMotorTalonConfigs = new TalonFXConfiguration();
 
@@ -100,7 +100,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     // Middle Motor Config
     middleMotor.getConfigurator().apply(new TalonFXConfiguration());
-    middleMotor.setInverted(false);
+    // middleMotor.setInverted(false);
 
     TalonFXConfiguration middleMotorTalonConfigs = new TalonFXConfiguration();
 
@@ -143,6 +143,9 @@ public class ArmSubsystem extends SubsystemBase {
     hangarMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(150);
 
     hangarMotor.getConfigurator().apply(hangarMotorTalonConfigs, 0.050);
+
+    //left motor
+    leftBaseMotor.setControl(new Follower(rightBaseMotor.getDeviceID(), true));
   }
 
 

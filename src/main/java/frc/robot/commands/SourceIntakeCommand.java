@@ -65,10 +65,11 @@ public class SourceIntakeCommand extends Command {
     }
     if(state == 5 && m_arm.getBeamIntake()) {
       m_arm.setMiddlePos(348);
-      m_spark.setArmIntakeMotor(-0.15);
+      m_spark.setArmIntakeMotor(-0.35);
       state = 6;
+    }
     if(state == 6 && m_arm.getBeamIntake() && m_arm.getBeamOuttake()){
-      m_spark.setArmIntakeMotor(0.1);
+      m_spark.setArmIntakeMotor(0.2);
       state = 7;
     } 
     if(state ==7 && m_arm.getBeamIntake() && !m_arm.getBeamOuttake()){
@@ -77,7 +78,6 @@ public class SourceIntakeCommand extends Command {
       returnFlag = true;
     }
       
-    }
 
   }
 

@@ -34,8 +34,10 @@ public class L3Command extends Command {
   public void initialize() {
     Constants.killFlag = false;
     ArmSubsystem.algaeFlag = false;
-    m_spark.setArmIntakeMotor(0);
     returnFlag = false;
+    m_spark.setArmIntakeMotor(0);
+    armMiddlePos = m_arm.getMiddleCANPos();
+    state = 0;
     
   }
 
@@ -43,10 +45,8 @@ public class L3Command extends Command {
   @Override
   public void execute() {
     if(ArmSubsystem.armState == 1){
-      if(state == 0.5){
-        m_arm.setRightBasePos(217);
-        state = 1;
-      }
+      m_arm.setRightBasePos(217);
+      state =1;
       if(state == 1 && Math.abs(m_arm.getMiddleCANPos() - 217)<3){
         m_arm.setRightBasePos(SET_ANGLE_Temp);//HES SET THIS TO THE SAME ANGLE AS L2. WHAT DO I DO NOW
         m_arm.setMiddlePos(SET_ANGLE_Temp);
@@ -58,7 +58,7 @@ public class L3Command extends Command {
         returnFlag = true;
         state = 4;
       }    
-   }else if(ArmSubsystem.armState == 2){
+   else if(ArmSubsystem.armState == 2){
       returnFlag = true;
    }else{
       m_arm.setMiddlePos(393);
@@ -66,15 +66,11 @@ public class L3Command extends Command {
       state = 1;
       if(state == 1) {    
         ArmSubsystem.shootFlag = true;
-        ArmSubsystem.armState = 1;
+        ArmSubsystem.armState = 2;
         returnFlag = true;
       } 
-    }
-    if(armMiddlePos<SET_ANGLE_Temp  && armBasePos<SET_ANGLE_Temp && state == 1) {
-      ArmSubsystem.shootFlag = true;
-      ArmSubsystem.armState = 2; 
-      returnFlag = true;
-    }    
+    }  
+  }
     
   }
 

@@ -37,7 +37,6 @@ public class GroundOuttakeCommand extends Command {
        lastT = 0;
        returnFlag = false;
        Constants.killFlag = false; 
-
     }else{
       Constants.killFlag = true; 
       returnFlag = true;

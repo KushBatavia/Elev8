@@ -41,7 +41,7 @@ public class HangPositionCommand extends Command {
   public void execute() {
     if(m_arm.getRightBasePos() < 230 && state == 0){
     // SET ARM INTAKE MOTOR FOR SMTH IDK
-      //Figure out which motors are being used
+    //Figure out which motors are being used
       state = 1;
     }
     if(state == 1){

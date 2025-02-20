@@ -35,11 +35,11 @@ public class GroundCoralCommand extends Command {
   @Override
   public void execute() {
     if(GroundIntakeSubsystem.intakeState == 1){
-      if(m_arm.getMiddleCANPos() > 350 || m_arm.getRightBaseCANPos() > 230) {
-        m_arm.setMiddlePos(345);  
+      if(m_arm.getRightBaseCANPos() > 230) {
+        m_arm.setMiddlePos(345);
         m_arm.setRightBasePos(225);
       }
-        state = 2;  
+      state = 2;  
     }else{
       returnFlag = true;
     }
@@ -47,7 +47,7 @@ public class GroundCoralCommand extends Command {
       m_ground.setPos(95);
       m_ground.setIntakeMotor(0.3);
       state = 3;
-      GroundIntakeSubsystem.coralState = true; 
+      GroundIntakeSubsystem.coralState = true;
     }
     if(state ==3 && m_ground.getCurrent()>20){
       m_ground.setIntakeMotor(0);

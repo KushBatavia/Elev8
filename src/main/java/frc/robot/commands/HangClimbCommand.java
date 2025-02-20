@@ -30,15 +30,12 @@ public class HangClimbCommand extends Command {
   @Override
   public void initialize() {
     Constants.killFlag = false;
-    state = 0.5; 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(state == 0.5){
-      m_arm.setHangarMotorPower(-0.1);
-    }
+    m_arm.setHangarMotorPower(-0.1);
   }
 
   // Called once the command ends or is interrupted.

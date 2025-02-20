@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -23,7 +24,9 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   public static DigitalInput beamBreaker1 = new DigitalInput(0);
   public CANcoder canCoder = new CANcoder(10, "rio"); 
   public MotionMagicDutyCycle mMotionMagicDutyCycle;
+  public VelocityDutyCycle mVelocityDutyCycle;
 
+  //SET VALUES LATER WHEN VARSHIL SIR GIVES
   private final double UPPER_LIMIT = 0;
   private final double DOWNER_LIMIT = 0;
 
@@ -32,11 +35,11 @@ public class GroundIntakeSubsystem extends SubsystemBase {
 
   
   /** Creates a new IntakeSubsystem. */
-  @SuppressWarnings("removal")
+  // @SuppressWarnings("removal")
   public GroundIntakeSubsystem() {
     // Intake Motor Config
     intakeMotor.getConfigurator().apply(new TalonFXConfiguration());
-    intakeMotor.setInverted(false);
+    // intakeMotor.setInverted(false);
 
     TalonFXConfiguration intakeMotorTalonConfigs  = new TalonFXConfiguration();
 
@@ -46,6 +49,7 @@ public class GroundIntakeSubsystem extends SubsystemBase {
     intakeMotorTalonConfigs.Slot0.withKG(0);
     intakeMotorTalonConfigs.Slot0.withKI(0);
     intakeMotorTalonConfigs.Slot0.withKD(0);
+    
 
     intakeMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
     intakeMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
@@ -60,12 +64,12 @@ public class GroundIntakeSubsystem extends SubsystemBase {
 
     // Hood Intake Motor Config
     hoodIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
-    hoodIntakeMotor.setInverted(false);
+    // hoodIntakeMotor.setInverted(false);
 
     TalonFXConfiguration hoodIntakeMotorTalonConfigs  = new TalonFXConfiguration();
 
-    hoodIntakeMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(1);
-    hoodIntakeMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-1);
+    hoodIntakeMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
+    hoodIntakeMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
     hoodIntakeMotorTalonConfigs.Slot0.withKP(0.2);
     hoodIntakeMotorTalonConfigs.Slot0.withKG(0);
     hoodIntakeMotorTalonConfigs.Slot0.withKI(0);
@@ -78,7 +82,8 @@ public class GroundIntakeSubsystem extends SubsystemBase {
     hoodIntakeMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(1200);
 
     mMotionMagicDutyCycle = new MotionMagicDutyCycle(0);
-    PositionDutyCycle hoodIntakeMotorPositionDutyCycle = new PositionDutyCycle(0);
+    mVelocityDutyCycle = new VelocityDutyCycle(0);
+    // PositionDutyCycle hoodIntakeMotorPositionDutyCycle = new PositionDutyCycle(0);
     hoodIntakeMotor.getConfigurator().apply(hoodIntakeMotorTalonConfigs, 0.050);
     hoodIntakeMotor.setPosition(canCoder.getAbsolutePosition().getValueAsDouble() * Constants.hood_gear_ratio);
   }
@@ -87,8 +92,8 @@ public class GroundIntakeSubsystem extends SubsystemBase {
     return beamBreaker1.get();
   }
 
-  public void setIntakeMotor(double voltage) {
-    intakeMotor.set(voltage);
+  public void setIntakeMotor(double velocity) {
+    intakeMotor.setControl(mVelocityDutyCycle.withVelocity(velocity).withSlot(0));
   }
 
   @Override

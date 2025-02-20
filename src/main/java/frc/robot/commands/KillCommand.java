@@ -17,7 +17,6 @@ public class KillCommand extends Command {
   private ArmSubsystem m_arm;
   private GroundIntakeSubsystem m_ground;
   private SparkMaxSubsystem m_spark;
-  private RobotContainer container;
   /** Creates a new KillCommand. */
   public KillCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -50,6 +49,6 @@ public class KillCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

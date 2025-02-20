@@ -18,7 +18,6 @@ public class L2Command extends Command {
   private double state = 0;
   private double armMiddlePos;
   private double armBasePos;
-  private double SET_ANGLE_Temp;
   private boolean returnFlag;
   
 
@@ -38,18 +37,14 @@ public class L2Command extends Command {
     ArmSubsystem.algaeFlag = false;
     m_spark.setArmIntakeMotor(0);
     armMiddlePos = m_arm.getMiddleCANPos();
-    if(ArmSubsystem.armState!=1) {
-      state = 0.5;
-    }else{
-      returnFlag = true; 
-    }
+    state = 0;
     
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(ArmSubsystem.armState == 2){
+    if(ArmSubsystem.armState == 2){ //If already at L3, run this logic
       m_arm.setRightBasePos(225);
       state = 1;
       if(state == 1 && Math.abs(m_arm.getRightBasePos() - 225)<3){
@@ -63,9 +58,9 @@ public class L2Command extends Command {
         returnFlag = true;
         state = 4;
       }    
-   }else if(ArmSubsystem.armState == 1){
+   }else if(ArmSubsystem.armState == 1){ //If already at L2, then kill
     returnFlag = true;
-   }else{
+   }else{//any other position logic
     m_arm.setMiddlePos(353);
     m_arm.setRightBasePos(210);
     state = 1;
