@@ -35,13 +35,12 @@ public class SourceIntakeCommand extends Command {
   @Override
   public void initialize() {
     Constants.killFlag = false;
-    // state = 0;
     returnFlag = false;
     ArmSubsystem.algaeFlag = false;
     if(m_groundIntake.getPos()>287 /*change later*/) {
       m_groundIntake.setPos(262);
-      state = 4;
     }
+    state = 4;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
