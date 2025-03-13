@@ -26,8 +26,8 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   public MotionMagicDutyCycle mMotionMagicDutyCycle;
   public VelocityDutyCycle mVelocityDutyCycle;
   //SET VALUES LATER WHEN VARSHIL SIR GIVES
-  private final double UPPER_LIMIT = 0;
-  private final double DOWNER_LIMIT = 0;
+  private final double UPPER_LIMIT = 95;
+  private final double DOWNER_LIMIT = 293;
 
   public static double intakeState = 1;
   public static boolean coralState = false;
@@ -92,7 +92,7 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   }
 
   public void setIntakeMotor(double velocity) {
-    intakeMotor.setControl(mVelocityDutyCycle.withVelocity(velocity).withSlot(0));
+    intakeMotor.setVoltage(velocity*16);
   }
 
   @Override
@@ -108,8 +108,8 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   }
 
   public void setPos(double angle) {
-    angle = Math.max(angle, UPPER_LIMIT);
-    angle = Math.min(angle, DOWNER_LIMIT);
+    angle = Math.max(angle, DOWNER_LIMIT);
+    angle = Math.min(angle, UPPER_LIMIT);
     hoodIntakeMotor.setControl(mMotionMagicDutyCycle.withPosition((angle * Constants.hood_gear_ratio) / 360).withSlot(0));
   }
 

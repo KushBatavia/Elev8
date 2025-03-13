@@ -85,8 +85,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     TalonFXConfiguration rightBaseMotorTalonConfigs = new TalonFXConfiguration();
 
-    rightBaseMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
-    rightBaseMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
+    rightBaseMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0);
+    rightBaseMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(0);
     rightBaseMotorTalonConfigs.Slot0.withKP(0.2);
     // rightBaseMotorTalonConfigs.Slot0.withKG(0); 
     rightBaseMotorTalonConfigs.Slot0.withKI(0);
@@ -109,8 +109,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     TalonFXConfiguration middleMotorTalonConfigs = new TalonFXConfiguration();
 
-    middleMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
-    middleMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
+    middleMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.0);
+    middleMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.0);
 
     middleMotorTalonConfigs.Slot0.withKP(0.2);
     // middleMotorTalonConfigs.Slot0.withKG(0);
@@ -133,8 +133,8 @@ public class ArmSubsystem extends SubsystemBase {
     TalonFXConfiguration hangarMotorTalonConfigs = new TalonFXConfiguration();
     hangarMotorTalonConfigs = new TalonFXConfiguration();
 
-    hangarMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.6);
-    hangarMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.6);
+    hangarMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0);
+    hangarMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0);
 
     hangarMotorTalonConfigs.Slot0.withKP(0.5); // .52O
     // hangarMotorTalonConfigs.Slot0.withKG(0.03);
