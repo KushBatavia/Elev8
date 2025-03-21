@@ -9,7 +9,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeUpRemovalCommand extends Command {
-  private ArmSubsystem m_arm = new ArmSubsystem();
+  private ArmSubsystem m_arm;
   private double SET_ANGLE_Temp;
   private boolean returnFlag;
   /** Creates a new AlgaeUpRemovalCommand. */

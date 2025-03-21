@@ -12,8 +12,8 @@ import frc.robot.subsystems.GroundIntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class GroundAlgaeCommand extends Command {
-  private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem();
-  private ArmSubsystem m_arm = new ArmSubsystem();
+  private GroundIntakeSubsystem m_ground;
+  private ArmSubsystem m_arm;
   private double state;
   private double SET_ANGLE_Temp;
   private double SET_POWER_Temp;

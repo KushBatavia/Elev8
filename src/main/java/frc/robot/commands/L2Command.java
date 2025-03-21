@@ -12,9 +12,9 @@ import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class L2Command extends Command {
-  private ArmSubsystem m_arm = new ArmSubsystem();
-  private GroundIntakeSubsystem m_ground = new GroundIntakeSubsystem(); 
-  private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
+  private ArmSubsystem m_arm;
+  private GroundIntakeSubsystem m_ground; 
+  private SparkMaxSubsystem m_spark ;
   private double state = 0;
   private double armMiddlePos;
   private double armBasePos;
@@ -36,13 +36,6 @@ public class L2Command extends Command {
     Constants.killFlag = false;
     returnFlag = false;
     ArmSubsystem.algaeFlag = false;
-    m_spark.setArmIntakeMotor(0);
-    armMiddlePos = m_arm.getMiddleCANPos();
-    if(ArmSubsystem.armState!=1) {
-      state = 0.5;
-    }else{
-      returnFlag = true; 
-    }
     
   }
 
@@ -53,8 +46,8 @@ public class L2Command extends Command {
       m_arm.setRightBasePos(225);
       state = 1;
       if(state == 1 && Math.abs(m_arm.getRightBasePos() - 225)<3){
-        m_arm.setMiddlePos(359);
-        m_arm.setRightBasePos(213);
+        m_arm.setMiddlePos(353);
+        m_arm.setRightBasePos(210);
         state = 3;
       }
       if(state == 3) {    

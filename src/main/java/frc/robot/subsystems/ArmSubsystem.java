@@ -37,24 +37,25 @@ public class ArmSubsystem extends SubsystemBase {
   // CHANGE ALL CAN IDS
   public TalonFX leftBaseMotor = new TalonFX(21, "rio"); // Left Motor is the follower
   public TalonFX rightBaseMotor = new TalonFX(22, "rio"); // Right Motor is the master
-  public TalonFX middleMotor = new TalonFX(23, "rio");
-  public TalonFX hangarMotor = new TalonFX(51, "rio");
-  public CANcoder canCoderLeft = new CANcoder(24, "rio");
-  public CANcoder canCoderMiddle = new CANcoder(25, "rio");
+  public TalonFX middleMotor = new TalonFX(23);
+  public TalonFX hangarMotor = new TalonFX(51);
+  public CANcoder canCoderLeft = new CANcoder(24);
+  public CANcoder canCoderMiddle = new CANcoder(25);
 
 
-  public DigitalInput beamBreaker1 = new DigitalInput(1);
-  public DigitalInput beamBreaker2 = new DigitalInput(2);
+  public static DigitalInput intakeBeam = new DigitalInput(1);
+  public static DigitalInput outtakeBeam = new DigitalInput(0);
+  public static DigitalInput hangarBeam = new DigitalInput(2);
 
   public MotionMagicDutyCycle mMotionMagicDutyCycleBase;
   public MotionMagicDutyCycle mMotionMagicDutyCycleMiddle;
   public MotionMagicDutyCycle mMotionMagicDutyCycleHangar;
   
 
-  public static final double BASE_UPPER_LIMIT = 0;
-  public static final double BASE_DOWNER_LIMIT = 0;
-  public static final double MIDDLE_UPPER_LIMIT = 0;
-  public static final double MIDDLE_DOWNER_LIMIT = 0;
+  public static final double BASE_UPPER_LIMIT = 271;
+  public static final double BASE_DOWNER_LIMIT = 170;
+  public static final double MIDDLE_UPPER_LIMIT = 476;
+  public static final double MIDDLE_DOWNER_LIMIT = 260;
 
   public static boolean algaeFlag = false;
 
@@ -69,7 +70,7 @@ public class ArmSubsystem extends SubsystemBase {
     //5 = Source Intake
     //6 = Hang
   /** Creates a new ArmSubsystem. */
-  @SuppressWarnings("removal")
+  // @SuppressWarnings("removal")
   public ArmSubsystem() {
 
     leftBaseMotor.setControl(new Follower(rightBaseMotor.getDeviceID(), true));
@@ -128,15 +129,15 @@ public class ArmSubsystem extends SubsystemBase {
     TalonFXConfiguration hangarMotorTalonConfigs = new TalonFXConfiguration();
     hangarMotorTalonConfigs = new TalonFXConfiguration();
 
-    hangarMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.6);
-    hangarMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.6);
+    hangarMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
+    hangarMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
 
     hangarMotorTalonConfigs.Slot0.withKP(0.5); // .52O
     // hangarMotorTalonConfigs.Slot0.withKG(0.03);
     hangarMotorTalonConfigs.Slot0.withKI(0);
     hangarMotorTalonConfigs.Slot0.withKD(0);
 
-    hangarMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Brake);
+    hangarMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
     hangarMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
 
     hangarMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(80);
@@ -166,11 +167,11 @@ public class ArmSubsystem extends SubsystemBase {
   
 
   public boolean getBeamIntake() {//gets intake beam
-    return beamBreaker1.get();
+    return intakeBeam.get();
   }
 
   public boolean getBeamOuttake() {//gets outtake beam
-    return beamBreaker2.get();
+    return outtakeBeam.get();
   }
 
   public void setHangarMotorPower(double power){
@@ -206,13 +207,5 @@ public class ArmSubsystem extends SubsystemBase {
 
   public double getMiddlePos() {
     return (middleMotor.getPosition().getValueAsDouble() / Constants.arm_middle_gear_ratio) * 360;
-  }
-
-  public void resetMiddle() {
-    middleMotor.setPosition(getMiddlePos() * Constants.arm_middle_gear_ratio);
-  }
-
-  public void resetBase() {
-    rightBaseMotor.setPosition(getRightBasePos() * Constants.arm_base_gear_ratio);
   }
 }

@@ -12,8 +12,8 @@ import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ArmShooterCommand extends Command {
-  private ArmSubsystem m_arm = new ArmSubsystem();
-  private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
+  private ArmSubsystem m_arm;
+  private SparkMaxSubsystem m_spark ;
   private double state = 0;
   private double prevT;
   private double lastT;

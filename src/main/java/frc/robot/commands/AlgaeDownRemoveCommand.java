@@ -11,7 +11,7 @@ import frc.robot.subsystems.GroundIntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeDownRemoveCommand extends Command {
-  private ArmSubsystem m_arm = new ArmSubsystem();
+  private ArmSubsystem m_arm;
   private double SET_ANGLE_Temp; //I dont have values, so these are just temporary variable created that im using everywhere.
 
   /** Creates a new AlgaeDownRemoveCommand. */

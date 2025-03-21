@@ -13,8 +13,8 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final double hood_gear_ratio = 60.0;
-  public static final double arm_base_gear_ratio = 80.0;
+  public static final double hood_gear_ratio = 50.0;
+  public static final double arm_base_gear_ratio = 80.0*5;
   public static final double arm_middle_gear_ratio = 39.4736842105;
   public static class OperatorConstants {
   public static final int kDriverControllerPort = 0;

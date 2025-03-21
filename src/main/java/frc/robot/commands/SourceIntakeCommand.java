@@ -13,9 +13,9 @@ import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SourceIntakeCommand extends Command {
-  private ArmSubsystem m_arm = new ArmSubsystem();
-  private GroundIntakeSubsystem m_groundIntake = new GroundIntakeSubsystem();
-  private SparkMaxSubsystem m_spark = new SparkMaxSubsystem();
+  private ArmSubsystem m_arm;
+  private GroundIntakeSubsystem m_groundIntake;
+  private SparkMaxSubsystem m_spark;
   private double state = 0;
   private double SET_ANGLE_Temp;
   private double SET_POWER_Temp;
