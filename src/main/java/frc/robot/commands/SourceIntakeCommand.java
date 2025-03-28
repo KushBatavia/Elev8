@@ -9,13 +9,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
-import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SourceIntakeCommand extends Command {
   private ArmSubsystem m_arm;
   private GroundIntakeSubsystem m_groundIntake;
-  private SparkMaxSubsystem m_spark;
   private double state = 0;
   private double SET_ANGLE_Temp;
   private double SET_POWER_Temp;
@@ -24,11 +22,10 @@ public class SourceIntakeCommand extends Command {
   private boolean returnFlag;
   
   /** Creates a new SourceIntakeCommand. */
-  public SourceIntakeCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
+  public SourceIntakeCommand(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
     this.m_groundIntake = m_ground;
-    this.m_spark = m_spark;
   }
 
   // Called when the command is initially scheduled.
@@ -59,20 +56,20 @@ public class SourceIntakeCommand extends Command {
     if(m_groundIntake.getPos() > 257 && state==4){
       m_arm.setMiddlePos(385);
       m_arm.setRightBasePos(253);
-      m_spark.setArmIntakeMotor(-0.6);
+      m_arm.setSourcePower(-0.6);
       ArmSubsystem.armState = 5;
       state = 5;
     }
     if(state == 5 && m_arm.getBeamIntake()) {
       m_arm.setMiddlePos(348);
-      m_spark.setArmIntakeMotor(-0.15);
+      m_arm.setSourcePower(-0.15);
       state = 6;
     if(state == 6 && m_arm.getBeamIntake() && m_arm.getBeamOuttake()){
-      m_spark.setArmIntakeMotor(0.1);
+      m_arm.setSourcePower(0.1);
       state = 7;
     } 
     if(state ==7 && m_arm.getBeamIntake() && !m_arm.getBeamOuttake()){
-      m_spark.setArmIntakeMotor(0);
+      m_arm.setSourcePower(0);
       state = 8;
       returnFlag = true;
     }

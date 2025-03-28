@@ -8,23 +8,20 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AlgaeRemoveRunCommand extends Command {
-  private SparkMaxSubsystem m_spark ;
+public class AlgaeIntakeCommand extends Command {
+  private ArmSubsystem m_arm;
   private double state;
-  private double armMiddlePos;
-  private double armBasePos;
   private double SET_ANGLE_Temp; //I dont have values, so these are just temporary variable created that im using everywhere.
   private double SET_POWER_Temp;//Not the same everywhere, just follow the logic dont look at the variable being used
-  private double prevT;
-  private double lastT;
   private boolean returnFlag;
+
+
   /** Creates a new AlgaeRemoveRunCommand. */
-  public AlgaeRemoveRunCommand(SparkMaxSubsystem m_spark) {
+  public AlgaeIntakeCommand(ArmSubsystem m_arm){
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_spark = m_spark;
+    this.m_arm = m_arm;
   }
 
   // Called when the command is initially scheduled.
@@ -38,14 +35,12 @@ public class AlgaeRemoveRunCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    prevT = Timer.getFPGATimestamp();
-    if(armMiddlePos>SET_ANGLE_Temp  && armBasePos>SET_ANGLE_Temp && ArmSubsystem.algaeFlag) {
-      m_spark.setArmIntakeMotor(-0.3);
-      lastT = Timer.getFPGATimestamp();
+    if(m_arm.getMiddlePos()>SET_ANGLE_Temp  && m_arm.getRightBasePos()>SET_ANGLE_Temp) {//DO I NEED THESE CHECKS
+      m_arm.setSourcePower(SET_ANGLE_Temp);
       state = 1;
     }
-    if(state == 1 && Math.abs(prevT - lastT) > 0.5) {
-        m_spark.setArmIntakeMotor(0);
+    if(state == 1 && m_arm.getSourceCurrent()>SET_POWER_Temp) {
+        m_arm.setSourcePower(0);
         state = 2;
       }
       returnFlag = true;

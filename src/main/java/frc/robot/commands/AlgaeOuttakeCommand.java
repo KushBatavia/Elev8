@@ -8,64 +8,47 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.GroundIntakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class GroundOuttakeCommand extends Command {
-  /** Creates a new GroundOuttakeCommand. */
-  private GroundIntakeSubsystem m_ground;
+public class AlgaeOuttakeCommand extends Command {
   private ArmSubsystem m_arm;
-  private double state = 0;
-  private double SET_ANGLE_Temp;
-  private double SET_POWER_Temp;
+  private double state;
   private double prevT;
   private double lastT;
+  private double SET_ANGLE_Temp; //I dont have values, so these are just temporary variable created that im using everywhere.
+  private double SET_POWER_Temp;//Not the same everywhere, just follow the logic dont look at the variable being used
   private boolean returnFlag;
-  public GroundOuttakeCommand(GroundIntakeSubsystem m_ground, ArmSubsystem m_arm) {
+
+
+  /** Creates a new AlgaeRemoveRunCommand. */
+  public AlgaeOuttakeCommand(ArmSubsystem m_arm){
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
-    this.m_ground = m_ground;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     Constants.killFlag = false;
-    if(m_ground.getHoodPos()<220 && GroundIntakeSubsystem.intakeState == -1) {
-       state = 1; 
-       prevT = 0; 
-       lastT = 0;
-       returnFlag = false;
-       Constants.killFlag = false; 
-
-    }else{
-      Constants.killFlag = true; 
-      returnFlag = true;
-    }
+    state = 0;
+    returnFlag = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    prevT = Timer.getFPGATimestamp();
-    if(state == 1) {
-      if (GroundIntakeSubsystem.coralState) { 
-        //Coral
-        m_ground.setIntakeMotor(-0.19);
-        m_ground.setPos(263);
-      } else if (!GroundIntakeSubsystem.coralState) { 
-        //Algae
-        m_ground.setIntakeMotor(-0.8);
-      }
-      state = 2;
-      lastT = Timer.getFPGATimestamp();
+    if(state == 0) {
+      m_arm.setSourcePower(SET_ANGLE_Temp);
+      state = 1;
+      prevT = Timer.getFPGATimestamp();
     }
-    if(state == 2 && Math.abs(lastT - prevT) > 0.5){
-      m_ground.setIntakeMotor(0);
-      GroundIntakeSubsystem.intakeState = GroundIntakeSubsystem.intakeState*-1;
+    lastT = Timer.getFPGATimestamp();
+    if(state == 1 && Math.abs(prevT-lastT)>0.5) {
+        m_arm.setSourcePower(0);
+        state = 2;
+      }
       returnFlag = true;
     }
-  }
 
   // Called once the command ends or is interrupted.
   @Override

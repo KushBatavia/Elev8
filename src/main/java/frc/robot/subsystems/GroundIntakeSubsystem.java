@@ -12,78 +12,116 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class GroundIntakeSubsystem extends SubsystemBase {
-  public TalonFX intakeMotor = new TalonFX(14, "rio");
-  public TalonFX hoodIntakeMotor = new TalonFX(15, "rio");
+  public TalonFX intakeBottomMotor = new TalonFX(14, "rio");
+  public TalonFX intakeTopMotor = new TalonFX(14, "rio");
+  public TalonFX hoodMotor = new TalonFX(15, "rio");
   public CANcoder canCoder = new CANcoder(10, "rio"); 
   public MotionMagicDutyCycle mMotionMagicDutyCycle;
 
-  private final double UPPER_LIMIT = 293;
-  private final double DOWNER_LIMIT = 95;
+  private final double SET_VALUE_TEMP = 0;
+  private final double UPPER_LIMIT = SET_VALUE_TEMP;
+  private final double DOWNER_LIMIT = SET_VALUE_TEMP;
 
   public static double intakeState = 1;
   public static boolean coralState = false;
+
+  public static DigitalInput bottomBeam = new DigitalInput(1);
+  public static DigitalInput topBeam = new DigitalInput(0);
 
   
   /** Creates a new IntakeSubsystem. */
   @SuppressWarnings("removal")
   public GroundIntakeSubsystem() {
-    // Intake Motor Config
-    intakeMotor.getConfigurator().apply(new TalonFXConfiguration());
-    intakeMotor.setInverted(false);
 
-    TalonFXConfiguration intakeMotorTalonConfigs  = new TalonFXConfiguration();
+    //Intake Top MOtor COnfig
+    intakeTopMotor.getConfigurator().apply(new TalonFXConfiguration());
+    intakeTopMotor.setInverted(false);
 
-    intakeMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
-    intakeMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
-    intakeMotorTalonConfigs.Slot0.withKP(0.2);
-    intakeMotorTalonConfigs.Slot0.withKG(0);
-    intakeMotorTalonConfigs.Slot0.withKI(0);
-    intakeMotorTalonConfigs.Slot0.withKD(0);
+    TalonFXConfiguration intakeTopMotorTalonConfigs  = new TalonFXConfiguration();
 
-    intakeMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
-    intakeMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+    intakeTopMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
+    intakeTopMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
+    intakeTopMotorTalonConfigs.Slot0.withKP(0.2);
+    intakeTopMotorTalonConfigs.Slot0.withKG(0);
+    intakeTopMotorTalonConfigs.Slot0.withKI(0);
+    intakeTopMotorTalonConfigs.Slot0.withKD(0);
+
+    intakeTopMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
+    intakeTopMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
 
     // motor1TalonConfigs.MotionMagic.withMotionMagicAcceleration(1200);
     // motor1TalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(1200);
 
     // MotionMagicDutyCycle mMotionMagicDutyCycle = new MotionMagicDutyCycle(0);
     // PositionDutyCycle intakeMotorPositionDutyCycle = new PositionDutyCycle(0);
-    intakeMotor.getConfigurator().apply(intakeMotorTalonConfigs, 0.050);
-    intakeMotor.setPosition(0);
+    intakeTopMotor.getConfigurator().apply(intakeTopMotorTalonConfigs, 0.050);
+    intakeTopMotor.setPosition(0);
+
+
+    // Intake Bottom Motor Config
+    intakeBottomMotor.getConfigurator().apply(new TalonFXConfiguration());
+    intakeBottomMotor.setInverted(false);
+
+    TalonFXConfiguration intakeBottomMotorTalonConfigs  = new TalonFXConfiguration();
+
+    intakeBottomMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
+    intakeBottomMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
+    intakeBottomMotorTalonConfigs.Slot0.withKP(0.2);
+    intakeBottomMotorTalonConfigs.Slot0.withKG(0);
+    intakeBottomMotorTalonConfigs.Slot0.withKI(0);
+    intakeBottomMotorTalonConfigs.Slot0.withKD(0);
+
+    intakeBottomMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
+    intakeBottomMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+
+    // motor1TalonConfigs.MotionMagic.withMotionMagicAcceleration(1200);
+    // motor1TalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(1200);
+
+    // MotionMagicDutyCycle mMotionMagicDutyCycle = new MotionMagicDutyCycle(0);
+    // PositionDutyCycle intakeMotorPositionDutyCycle = new PositionDutyCycle(0);
+    intakeBottomMotor.getConfigurator().apply(intakeBottomMotorTalonConfigs, 0.050);
+    intakeBottomMotor.setPosition(0);
 
     // Hood Intake Motor Config
-    hoodIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
-    hoodIntakeMotor.setInverted(false);
+    hoodMotor.getConfigurator().apply(new TalonFXConfiguration());
+    hoodMotor.setInverted(false);
 
-    TalonFXConfiguration hoodIntakeMotorTalonConfigs  = new TalonFXConfiguration();
+    TalonFXConfiguration hoodMotorTalonConfigs  = new TalonFXConfiguration();
 
-    hoodIntakeMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
-    hoodIntakeMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
-    hoodIntakeMotorTalonConfigs.Slot0.withKP(0.2);
-    hoodIntakeMotorTalonConfigs.Slot0.withKG(0);
-    hoodIntakeMotorTalonConfigs.Slot0.withKI(0);
-    hoodIntakeMotorTalonConfigs.Slot0.withKD(0);
+    hoodMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
+    hoodMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
+    hoodMotorTalonConfigs.Slot0.withKP(0.2);
+    hoodMotorTalonConfigs.Slot0.withKG(0);
+    hoodMotorTalonConfigs.Slot0.withKI(0);
+    hoodMotorTalonConfigs.Slot0.withKD(0);
 
-    hoodIntakeMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
-    hoodIntakeMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+    hoodMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
+    hoodMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
 
-    hoodIntakeMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(1200);
-    hoodIntakeMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(1200);
+    hoodMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(1200);
+    hoodMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(1200);
 
     mMotionMagicDutyCycle = new MotionMagicDutyCycle(0);
     PositionDutyCycle hoodIntakeMotorPositionDutyCycle = new PositionDutyCycle(0);
-    hoodIntakeMotor.getConfigurator().apply(hoodIntakeMotorTalonConfigs, 0.050);
-    hoodIntakeMotor.setPosition(canCoder.getAbsolutePosition().getValueAsDouble() * Constants.hood_gear_ratio);
+    hoodMotor.getConfigurator().apply(hoodMotorTalonConfigs, 0.050);
+    hoodMotor.setPosition(canCoder.getAbsolutePosition().getValueAsDouble() * Constants.hood_gear_ratio);
   }
 
-  public void setIntakeMotor(double voltage) {
-    intakeMotor.set(voltage*16);
+  public void setBottomMotor(double voltage) {
+    voltage = Math.max(voltage, 0);
+    voltage = Math.min(voltage, 1);
+    intakeBottomMotor.set(voltage*16);
   }
+  public void setTopMotor(double voltage) {
+    intakeTopMotor.set(voltage*16);
+  }
+
 
   @Override
   public void periodic() {
@@ -100,14 +138,18 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   public void setPos(double angle) {
     angle = Math.max(angle, UPPER_LIMIT);
     angle = Math.min(angle, DOWNER_LIMIT);
-    hoodIntakeMotor.setControl(mMotionMagicDutyCycle.withPosition((angle * Constants.hood_gear_ratio) / 360).withSlot(0));
+    hoodMotor.setControl(mMotionMagicDutyCycle.withPosition((angle * Constants.hood_gear_ratio) / 360).withSlot(0));
   }
 
   public double getHoodPos() {
-    return (hoodIntakeMotor.getPosition().getValueAsDouble() / Constants.hood_gear_ratio) * 360;
+    return (hoodMotor.getPosition().getValueAsDouble() / Constants.hood_gear_ratio) * 360;
   }
 
-  public double getCurrent() {
-    return intakeMotor.getStatorCurrent().getValueAsDouble();
+  public boolean getBottomBeam() {//gets intake beam
+    return bottomBeam.get();
+  }
+
+  public boolean getTopBeam() {//gets outtake beam
+    return topBeam.get();
   }
 }

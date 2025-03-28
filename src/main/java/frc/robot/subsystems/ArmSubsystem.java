@@ -12,6 +12,7 @@ import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -39,6 +40,7 @@ public class ArmSubsystem extends SubsystemBase {
   public TalonFX rightBaseMotor = new TalonFX(22, "rio"); // Right Motor is the master
   public TalonFX middleMotor = new TalonFX(23);
   public TalonFX hangarMotor = new TalonFX(51);
+  public TalonFX sourceMotor = new TalonFX(0, "CHECK THIS CANBUS");
   public CANcoder canCoderLeft = new CANcoder(24);
   public CANcoder canCoderMiddle = new CANcoder(25);
 
@@ -50,6 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
   public MotionMagicDutyCycle mMotionMagicDutyCycleBase;
   public MotionMagicDutyCycle mMotionMagicDutyCycleMiddle;
   public MotionMagicDutyCycle mMotionMagicDutyCycleHangar;
+  public VelocityDutyCycle m_VelocityDutyCycleSource;
   
 
   public static final double BASE_UPPER_LIMIT = 271;
@@ -58,7 +61,6 @@ public class ArmSubsystem extends SubsystemBase {
   public static final double MIDDLE_DOWNER_LIMIT = 260;
 
   public static boolean algaeFlag = false;
-
   public static boolean shootFlag = false;
 
   public static int armState = 0;
@@ -73,6 +75,34 @@ public class ArmSubsystem extends SubsystemBase {
   // @SuppressWarnings("removal")
   public ArmSubsystem() {
 
+
+    //Source Motor Configs
+    m_VelocityDutyCycleSource = new VelocityDutyCycle(0);
+    sourceMotor.getConfigurator().apply(new TalonFXConfiguration());
+    sourceMotor.setInverted(false);
+
+    TalonFXConfiguration sourceMotorTalonConfigs = new TalonFXConfiguration();
+
+    sourceMotorTalonConfigs.MotorOutput.withPeakForwardDutyCycle(0.05);
+    sourceMotorTalonConfigs.MotorOutput.withPeakReverseDutyCycle(-0.05);
+    sourceMotorTalonConfigs.Slot0.withKP(0.2);
+    // sourceMotorTalonConfigs.Slot0.withKG(0); 
+    sourceMotorTalonConfigs.Slot0.withKI(0);
+    sourceMotorTalonConfigs.Slot0.withKD(0);
+
+    sourceMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
+    sourceMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+
+    sourceMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(70);
+    sourceMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(100);
+
+    mMotionMagicDutyCycleBase = new MotionMagicDutyCycle(0);
+    // PositionDutyCycle rightBaseMotorPositionDutyCycle = new PositionDutyCycle(0);
+    sourceMotor.getConfigurator().apply(sourceMotorTalonConfigs, 0.050);
+    sourceMotor.setPosition(getRightBaseCANPos()/360 * Constants.arm_base_gear_ratio);
+    sourceMotor.setPosition(0);
+
+    //Left Base Motor Configs
     leftBaseMotor.setControl(new Follower(rightBaseMotor.getDeviceID(), true));
 
     // Right Base Motor Config
@@ -91,13 +121,7 @@ public class ArmSubsystem extends SubsystemBase {
     rightBaseMotorTalonConfigs.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
     rightBaseMotorTalonConfigs.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
 
-    rightBaseMotorTalonConfigs.MotionMagic.withMotionMagicAcceleration(1200);
-    rightBaseMotorTalonConfigs.MotionMagic.withMotionMagicCruiseVelocity(1200);
-
-    mMotionMagicDutyCycleBase = new MotionMagicDutyCycle(0);
-    // PositionDutyCycle rightBaseMotorPositionDutyCycle = new PositionDutyCycle(0);
     rightBaseMotor.getConfigurator().apply(rightBaseMotorTalonConfigs, 0.050);
-    rightBaseMotor.setPosition(getRightBaseCANPos()/360 * Constants.arm_base_gear_ratio);
 
     // Middle Motor Config
     middleMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -174,8 +198,13 @@ public class ArmSubsystem extends SubsystemBase {
     return outtakeBeam.get();
   }
 
-  public void setHangarMotorPower(double power){
-    hangarMotor.set(power);
+  public void setHangarMotorPower(double voltage){
+    voltage = Math.max(voltage, 0);
+    voltage = Math.min(voltage, 1);
+    hangarMotor.set(voltage*16);
+  }
+  public void setSourcePower(double rotation){
+    sourceMotor.setControl(m_VelocityDutyCycleSource.withVelocity(rotation).withSlot(0));
   }
 
   public double getRightBaseCANPos() {
@@ -207,5 +236,9 @@ public class ArmSubsystem extends SubsystemBase {
 
   public double getMiddlePos() {
     return (middleMotor.getPosition().getValueAsDouble() / Constants.arm_middle_gear_ratio) * 360;
+  }
+
+  public double getSourceCurrent(){
+    return sourceMotor.getStatorCurrent().getValueAsDouble();
   }
 }

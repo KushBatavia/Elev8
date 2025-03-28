@@ -20,9 +20,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlgaeDownRemoveCommand;
 import frc.robot.commands.AlgaeUpRemovalCommand;
 import frc.robot.commands.ArmShooterCommand;
-import frc.robot.commands.GroundAlgaeCommand;
 import frc.robot.commands.GroundCoralCommand;
-import frc.robot.commands.GroundOuttakeCommand;
+// import frc.robot.commands.L1Command;
 import frc.robot.commands.HangClimbCommand;
 import frc.robot.commands.HangPositionCommand;
 import frc.robot.commands.KillCommand;
@@ -33,7 +32,6 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.GroundIntakeSubsystem;
-import frc.robot.subsystems.SparkMaxSubsystem;
 
 
 //WE DONT KNOW IF IT WORKS, BUT NEITHER DO OUR BRAINS, SO FUCK IT, WE'RE PUSHING TO MAIN
@@ -44,7 +42,6 @@ public class RobotContainer {
 
     public ArmSubsystem armSubsystem = new ArmSubsystem();
     public GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
-    public SparkMaxSubsystem sparkMax = new SparkMaxSubsystem();
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -110,17 +107,17 @@ public class RobotContainer {
         joystick.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
 
         joystick.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
-        joystick.x().onTrue(new GroundOuttakeCommand(groundIntake, armSubsystem));
-        joystick.b().onTrue(new L2Command(armSubsystem, groundIntake, sparkMax));
-        joystick.y().onTrue(new L3Command(armSubsystem, groundIntake, sparkMax));
+        // joystick.x().onTrue(new L1Command(groundIntake, armSubsystem));
+        joystick.b().onTrue(new L2Command(armSubsystem, groundIntake));
+        joystick.y().onTrue(new L3Command(armSubsystem, groundIntake));
         joystick.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));
-        joystick.back().onTrue(new KillCommand(armSubsystem, groundIntake, sparkMax));
-        joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
-        joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem, sparkMax));
+        joystick.back().onTrue(new KillCommand(armSubsystem, groundIntake));
+        joystick.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake));
+        joystick.leftBumper().onTrue(new ArmShooterCommand(armSubsystem));
 
         joystick2.a().onTrue(new GroundCoralCommand(groundIntake, armSubsystem));
-        joystick2.leftBumper().onTrue(new GroundAlgaeCommand(groundIntake, armSubsystem));
-        joystick2.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake, sparkMax));
+        // joystick2.leftBumper().onTrue(new GroundAlgaeCommand(groundIntake, armSubsystem));
+        joystick2.rightBumper().onTrue(new SourceIntakeCommand(armSubsystem, groundIntake));
         joystick2.y().onTrue(new AlgaeUpRemovalCommand(armSubsystem));
         joystick2.x().onTrue(new AlgaeDownRemoveCommand(armSubsystem));
         joystick2.pov(180).onTrue(new HangClimbCommand(armSubsystem, groundIntake));

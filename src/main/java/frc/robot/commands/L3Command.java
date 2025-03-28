@@ -9,24 +9,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem;
-import frc.robot.subsystems.SparkMaxSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class L3Command extends Command {
   private ArmSubsystem m_arm;
   private GroundIntakeSubsystem m_ground; 
-  private SparkMaxSubsystem m_spark ;
   private double state = 0;
   private double armMiddlePos;
   private double armBasePos;
   private double SET_ANGLE_Temp;
   private boolean returnFlag;
   /** Creates a new L3Command. */
-  public L3Command(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground, SparkMaxSubsystem m_spark) {
+  public L3Command(ArmSubsystem m_arm, GroundIntakeSubsystem m_ground) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
     this.m_ground = m_ground;
-    this.m_spark = m_spark;
   }
 
   // Called when the command is initially scheduled.
@@ -47,7 +44,7 @@ public class L3Command extends Command {
         state = 1;
       }
       if(state == 1 && Math.abs(m_arm.getMiddleCANPos() - 217)<3){
-        m_arm.setRightBasePos(393);//HES SET THIS TO THE SAME ANGLE AS L2. WHAT DO I DO NOW
+        m_arm.setRightBasePos(393);
         m_arm.setMiddlePos(187);
         state = 3;
       }
