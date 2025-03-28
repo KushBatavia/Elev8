@@ -35,6 +35,8 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.GroundIntakeSubsystem;
 import frc.robot.subsystems.SparkMaxSubsystem;
 
+
+//WE DONT KNOW IF IT WORKS, BUT NEITHER DO OUR BRAINS, SO FUCK IT, WE'RE PUSHING TO MAIN
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.1; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
